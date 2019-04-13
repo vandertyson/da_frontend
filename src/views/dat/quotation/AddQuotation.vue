@@ -195,7 +195,7 @@
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
-            Phải thêm mặt hàng trong phần chi tiết báo giá
+            {{message}}
             <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
           </v-snackbar>
         </v-layout>
@@ -258,7 +258,8 @@ export default {
       thue: 0,
       lam_tron: 0,
       valid: false,
-      snackbar: false
+      snackbar: false,
+      message: null
     };
   },
   created() {
@@ -373,6 +374,7 @@ export default {
         this.$data.selected_items === undefined ||
         this.$data.selected_items.length == 0
       ) {
+        this.$data.message = "Phải thêm mặt hàng trong phần chi tiết báo giá";
         this.$data.snackbar = true;
         return;
       }
@@ -405,9 +407,13 @@ export default {
       HTTP.post(URL.addQuot, post_param)
         .then(response => {
           this.posts = response.data;
+          this.$data.message = "Quotaion added successfully!";
+          this.$data.snackbar = true;
         })
         .catch(e => {
-          this.errors.push(e);
+          console.log(e);
+          this.$data.message = "Some errors happened!";
+          this.$data.snackbar = true;
         });
     }
   }

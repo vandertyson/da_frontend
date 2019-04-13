@@ -2,13 +2,13 @@
   <v-toolbar color="primary" fixed dark app>
     <v-toolbar-title class="ml-0 pl-3"></v-toolbar-title>
     <v-toolbar-side-icon @click.stop="handleDrawerToggle"></v-toolbar-side-icon>
-    <v-text-field
+    <!-- <v-text-field
       flat
       solo-inverted
       prepend-icon="search"
       label="Search"
       class="hidden-sm-and-down"
-    ></v-text-field>
+    ></v-text-field> -->
     <v-spacer></v-spacer>    
     <v-btn icon @click="handleFullScreen()">
       <v-icon>fullscreen</v-icon>
