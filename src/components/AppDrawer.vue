@@ -11,7 +11,7 @@
     <v-toolbar color="primary darken-1" dark>
       <img v-bind:src="computeLogo" height="36" alt="Vue Material Admin Template">
       <v-toolbar-title class="ml-0 pl-3">
-        <span class="hidden-sm-and-down">Vue Material</span>
+        <span class="hidden-sm-and-down">ututu</span>
       </v-toolbar-title>        
     </v-toolbar>
     <vue-perfect-scrollbar class="drawer-menu--scroll" :settings="scrollSettings">
@@ -69,7 +69,8 @@
   </v-navigation-drawer>
 </template>
 <script>
-import menu from '@/api/menu';
+// import menu from '@/api/menu';
+import dat_menu from '@/api/dat_menu';
 import VuePerfectScrollbar from 'vue-perfect-scrollbar';
 export default {
   name: 'app-drawer',
@@ -85,7 +86,7 @@ export default {
   data: () => ({
     mini: false,
     drawer: true,
-    menus: menu,
+    menus: dat_menu,
     scrollSettings: {
       maxScrollbarLength: 160
     }    

@@ -1,5 +1,4 @@
 export default [
-
   {
     path: '*',
     meta: {
@@ -8,7 +7,7 @@ export default [
     redirect: {
       path: '/404'
     }
-  },  
+  },
   {
     path: '/404',
     meta: {
@@ -55,7 +54,7 @@ export default [
   },
   {
     path: '/',
-    meta: { },
+    meta: {},
     name: 'Root',
     redirect: {
       name: 'Dashboard'
@@ -73,58 +72,14 @@ export default [
 
   {
     path: '/media',
-    meta: { },
+    meta: {},
     name: 'Media',
     props: (route) => ({ type: route.query.type }),
     component: () => import(
       /* webpackChunkName: "routes" */
       `@/views/Media.vue`
     )
-  },  
-  {
-    path: '/chat',
-    meta: {
-      public: true,
-    },
-    name: 'Chat',
-    component: () => import(
-      /* webpackChunkName: "routes" */
-      `@/components/chat/ChatLayout.vue`
-    ),
-    redirect: {
-      path: '/chat/messaging'
-    },
-    children: [
-      {
-        path: '/chat/messaging/:uuid?',
-        meta: {
-          public: true,
-        },
-        name: 'ChatMessaging',
-        props: true,
-        components: {
-          default: () => import(
-            /* webpackChunkName: "routes" */
-            `@/components/chat/ChatMessaging.vue`
-          ),  
-        }   
-      },
-      {
-        path: '/chat/contact/:uuid?',
-        meta: {
-          public: true,
-        },
-        name: 'ChatContact',
-        components: {
-          default: () => import(
-            /* webpackChunkName: "routes" */
-            `@/components/chat/ChatContact.vue`
-          ),  
-
-        }     
-      }             
-    ]
-  },    
+  },
   {
     path: '/mail',
     meta: {
@@ -148,7 +103,7 @@ export default [
         component: () => import(
           /* webpackChunkName: "routes" */
           `@/components/email/List.vue`
-        ),        
+        ),
       },
       {
         path: '/mail/0/:uuid',
@@ -159,10 +114,10 @@ export default [
         component: () => import(
           /* webpackChunkName: "routes" */
           `@/components/email/Reply.vue`
-        ),        
-      }      
+        ),
+      }
     ]
-  },  
+  },
   {
     path: '/components/alert',
     meta: { breadcrumb: true },
@@ -531,4 +486,23 @@ export default [
       `@/views/widgets/List.vue`
     )
   },
+  {
+    path: '/quotation',
+    meta: { breadcrumb: true },
+    name: 'quotation',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/quotation/ListQuotation.vue`
+    )
+  },
+  {
+    path: '/quotation/add',
+    meta: { breadcrumb: true },
+    name: 'quotation/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/quotation/AddQuotation.vue`
+    )
+  },
+  
 ];
