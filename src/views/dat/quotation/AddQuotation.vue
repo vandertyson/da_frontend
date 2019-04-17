@@ -205,12 +205,12 @@
 </template>
 <script>
 import { HTTP, URL } from "@/api/http-common";
-import Customer from "@/api/quotations/customer";
-import Countries from "@/api/country";
+// import Customer from "@/api/quotations/customer";
+// import Countries from "@/api/country";
 import Currency from "@/api/quotations/currency";
-import Sales from "@/api/quotations/sales";
-import Employees from "@/api/quotations/employee";
-import Items from "@/api/quotations/item";
+// import Sales from "@/api/quotations/sales";
+// import Employees from "@/api/quotations/employee";
+// import Items from "@/api/quotations/item";
 
 export default {
   components: {},
@@ -237,9 +237,9 @@ export default {
       menu_due_date: false,
       menu_doc_date: false,
       menu_tax_date: false,
-      sales: Sales,
-      employees: Employees,
-      items: Items,
+      sales: [],
+      employees: [],
+      items: [],
       selected_currency: Currency[0],
       current_item: {
         item: null,
@@ -264,10 +264,41 @@ export default {
   },
   created() {
     setTimeout(() => {
-      this.$data.customers = Customer;
       this.selectedCustomer = Customer[0];
       this.$data.ready = true;
     }, 1000);
+
+    HTTP.get(URL.getCustomer)
+      .then(response => {
+        this.$data.customers = response.data;
+      })
+      .catch(error => {
+        this.$data.ready = true;
+      });
+
+    HTTP.get(URL.getItem)
+      .then(response => {
+        this.$data.items = response.data;
+      })
+      .catch(error => {
+        this.$data.ready = true;
+      });
+
+    HTTP.get(URL.getEmployee)
+      .then(response => {
+        this.$data.employees = response.data;
+      })
+      .catch(error => {
+        this.$data.ready = true;
+      });
+
+    HTTP.get(URL.getSale)
+      .then(response => {
+        this.$data.sales = response.data;
+      })
+      .catch(error => {
+        this.$data.ready = true;
+      });
   },
   computed: {},
   methods: {
