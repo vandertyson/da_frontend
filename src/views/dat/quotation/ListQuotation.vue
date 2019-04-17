@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { HTTP } from "@/api/http-common";
+import { HTTP, URL } from "@/api/http-common";
 import Quotation from "@/api/quotations/quotation";
 import { error } from "util";
 export default {
