@@ -57,6 +57,7 @@ export default {
     };
   },
   created() {
+    console.log(URL.getQuot)
     HTTP.get(URL.getQuot)
       .then(response => {
         ready = true;
