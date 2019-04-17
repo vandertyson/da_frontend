@@ -17,7 +17,7 @@
                 <td class="text-xs-left">{{ props.item.code }}</td>
                 <td class="text-xs-left">{{ props.item.currency }}</td>
                 <td class="text-xs-left">{{ props.item.slpname }}</td>
-                <td class="text-xs-left">{{ props.item.employee }}</td>
+                <td class="text-xs-left">{{ props.item.emfirstname + props.item.emlastname }}</td>
                 <td class="text-xs-left">{{ props.item.dueDate }}</td>
                 <td class="text-xs-left">
                   <router-link to="/quotation/add" tag="button">
