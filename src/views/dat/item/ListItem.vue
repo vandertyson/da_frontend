@@ -1,10 +1,10 @@
 <template>
   <div id="page-forms">
-    <div v-if="!ready" class="text-xs-center">
-      <v-progress-circular indeterminate color="primary" :size="70"></v-progress-circular>
-    </div>
-    <v-container v-if="ready" grid-list-xl fluid>
-      <v-layout row wrap>
+    <v-container grid-list-xl fluid>
+      <div v-if="!ready" class="text-xs-center">
+        <v-progress-circular indeterminate color="primary" :size="70"></v-progress-circular>
+      </div>
+      <v-layout v-if="ready" row wrap>
         <router-link to="/quotation/add" tag="button">
           <v-btn color="success" class="text-lg-right">Add new item</v-btn>
         </router-link>
@@ -16,7 +16,7 @@
                 <td class="text-xs-left">{{ props.item.name }}</td>
                 <td class="text-xs-left">{{ props.item.groupname }}</td>
                 <td class="text-xs-left">{{ props.item.onhand }}</td>
-                <td class="text-xs-left">{{ props.item.uomcode }}</td>               
+                <td class="text-xs-left">{{ props.item.uomcode }}</td>
                 <td class="text-xs-left">
                   <router-link to="/quotation/add" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
@@ -46,7 +46,8 @@ export default {
         { text: "Item name", align: "left", value: "name" },
         { text: "Item group", align: "left", value: "groupname" },
         { text: "Stock", align: "left", value: "onhand" },
-        { text: "Unit", align: "left", value: "uomcode" },        
+        { text: "Unit", align: "left", value: "uomcode" },
+        { text: "", align: "left", value: "" }
       ],
       items: [],
       ready: false
@@ -64,7 +65,6 @@ export default {
       });
   },
   computed: {},
-  methods: {   
-  }
+  methods: {}
 };
 </script>
