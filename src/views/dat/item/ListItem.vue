@@ -1,23 +1,22 @@
 <template>
   <div id="page-forms">
-    <v-container grid-list-xl fluid>
+    <div v-if="!ready" class="text-xs-center">
+      <v-progress-circular indeterminate color="primary" :size="70"></v-progress-circular>
+    </div>
+    <v-container v-if="ready" grid-list-xl fluid>
       <v-layout row wrap>
-        <router-link to="/item/add" tag="button">
+        <router-link to="/quotation/add" tag="button">
           <v-btn color="success" class="text-lg-right">Add new item</v-btn>
         </router-link>
-        <div v-if="!ready" class="text-xs-center">
-          <v-progress-circular indeterminate color="primary" :size="70"></v-progress-circular>
-        </div>
-        <v-flex v-if="ready" lg12 text-xs-right>
+        <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
-            <v-data-table :headers="headers" :items="quotations" class="elevation-1">
+            <v-data-table :headers="headers" :items="items" class="elevation-1">
               <template v-slot:items="props">
-                <td class="text-xs-left">{{ props.item.id }}</td>
-                <td class="text-xs-left">{{ props.item.name }}</td>
                 <td class="text-xs-left">{{ props.item.code }}</td>
-                <td class="text-xs-left">{{ props.item.currency }}</td>
-                <td class="text-xs-left">{{ props.item.employee }}</td>
-                <td class="text-xs-left">{{ props.item.series }}</td>
+                <td class="text-xs-left">{{ props.item.name }}</td>
+                <td class="text-xs-left">{{ props.item.groupname }}</td>
+                <td class="text-xs-left">{{ props.item.onhand }}</td>
+                <td class="text-xs-left">{{ props.item.uomcode }}</td>               
                 <td class="text-xs-left">
                   <router-link to="/quotation/add" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
@@ -39,32 +38,34 @@
 import { HTTP, URL } from "@/api/http-common";
 import Quotation from "@/api/quotations/quotation";
 import { error } from "util";
-import { setTimeout } from "timers";
 export default {
   components: {},
   data() {
     return {
       headers: [
-        { text: "Code", align: "left", value: "id" },
-        { text: "Customer name", align: "left", value: "name" },
-        { text: "Customer code", align: "left", value: "code" },
-        { text: "Currency", align: "left", value: "currency" },
-        { text: "Saleperson name", align: "left", value: "protein" },
-        { text: "Series", align: "left", value: "series" },
-        { text: "", align: "left", value: "" }
+        { text: "Item code", align: "left", value: "code" },
+        { text: "Item name", align: "left", value: "name" },
+        { text: "Item group", align: "left", value: "groupname" },
+        { text: "Stock", align: "left", value: "onhand" },
+        { text: "Unit", align: "left", value: "uomcode" },        
       ],
-      quotations: Quotation,
+      items: [],
       ready: false
     };
   },
   created() {
-    HTTP.get(URL.getItem)
-      .then(response => {})
+    console.log(URL.getItem);
+    HTTP.get(URL.getQuot)
+      .then(response => {
+        this.$data.ready = true;
+        this.$data.items = response.data;
+      })
       .catch(error => {
         this.$data.ready = true;
       });
   },
   computed: {},
-  methods: {}
+  methods: {   
+  }
 };
 </script>
