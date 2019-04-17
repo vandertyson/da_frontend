@@ -60,7 +60,8 @@ export default {
     console.log(URL.getQuot)
     HTTP.get(URL.getQuot)
       .then(response => {
-        ready = true;
+        this.$data.ready = true;
+        alert("sadasd")
         console.log(response)       
         this.$data.quotations = response 
       })
