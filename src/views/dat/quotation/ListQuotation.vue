@@ -56,7 +56,7 @@ export default {
     };
   },
   created() {
-    HTTP.get(URL.getItem)
+    HTTP.get(URL.getQuot)
       .then(response => {
         console.log(response)        
       })
