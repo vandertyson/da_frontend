@@ -16,8 +16,9 @@
                 <td class="text-xs-left">{{ props.item.name }}</td>
                 <td class="text-xs-left">{{ props.item.code }}</td>
                 <td class="text-xs-left">{{ props.item.currency }}</td>
+                <td class="text-xs-left">{{ props.item.slpname }}</td>
                 <td class="text-xs-left">{{ props.item.employee }}</td>
-                <td class="text-xs-left">{{ props.item.series }}</td>
+                <td class="text-xs-left">{{ props.item.dueDate }}</td>
                 <td class="text-xs-left">
                   <router-link to="/quotation/add" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
@@ -48,8 +49,9 @@ export default {
         { text: "Customer name", align: "left", value: "name" },
         { text: "Customer code", align: "left", value: "code" },
         { text: "Currency", align: "left", value: "currency" },
-        { text: "Saleperson name", align: "left", value: "protein" },
-        { text: "Series", align: "left", value: "series" },
+        { text: "Saleperson name", align: "left", value: "slpname" },
+        { text: "Owner", align: "left", value: "employee" },
+        { text: "Due date", align: "left", value: "dueDate" },        
         { text: "", align: "left", value: "" }
       ],
       quotations: [],
@@ -60,10 +62,8 @@ export default {
     console.log(URL.getQuot)
     HTTP.get(URL.getQuot)
       .then(response => {
-        this.$data.ready = true;
-        alert("sadasd")
-        console.log(response)       
-        this.$data.quotations = response 
+        this.$data.ready = true;                
+        this.$data.quotations = response.data
       })
       .catch(error => {
         this.$data.ready = true;
