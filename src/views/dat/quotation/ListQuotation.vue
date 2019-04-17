@@ -17,7 +17,9 @@
                 <td class="text-xs-left">{{ props.item.code }}</td>
                 <td class="text-xs-left">{{ props.item.currency }}</td>
                 <td class="text-xs-left">{{ props.item.slpname }}</td>
-                <td class="text-xs-left">{{ props.item.emfirstname + " " + props.item.emplastname }}</td>
+                <td
+                  class="text-xs-left"
+                >{{ getName(props.item.emfirstname, props.item.emplastname) }}</td>
                 <td class="text-xs-left">{{ props.item.dueDate }}</td>
                 <td class="text-xs-left">
                   <router-link to="/quotation/add" tag="button">
@@ -70,6 +72,13 @@ export default {
       });
   },
   computed: {},
-  methods: {}
+  methods: {
+    getName: function(first_name, last_name) {
+      if (first_name && last_name) {
+        return first_name + " " + last_name;
+      }
+      return "N/A";
+    }
+  }
 };
 </script>
