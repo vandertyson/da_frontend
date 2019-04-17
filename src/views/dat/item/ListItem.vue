@@ -36,7 +36,6 @@
 
 <script>
 import { HTTP, URL } from "@/api/http-common";
-import Quotation from "@/api/quotations/quotation";
 import { error } from "util";
 export default {
   components: {},
@@ -55,7 +54,7 @@ export default {
   },
   created() {
     console.log(URL.getItem);
-    HTTP.get(URL.getQuot)
+    HTTP.get(URL.getItem)
       .then(response => {
         this.$data.ready = true;
         this.$data.items = response.data;
