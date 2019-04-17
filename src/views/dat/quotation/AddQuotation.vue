@@ -263,42 +263,30 @@ export default {
     };
   },
   created() {
-    setTimeout(() => {
-      this.selectedCustomer = Customer[0];
-      this.$data.ready = true;
-    }, 1000);
-
     HTTP.get(URL.getCustomer)
       .then(response => {
         this.$data.customers = response.data;
-      })
-      .catch(error => {
         this.$data.ready = true;
-      });
+      })
+      .catch(error => {});
 
     HTTP.get(URL.getItem)
       .then(response => {
         this.$data.items = response.data;
       })
-      .catch(error => {
-        this.$data.ready = true;
-      });
+      .catch(error => {});
 
     HTTP.get(URL.getEmployee)
       .then(response => {
         this.$data.employees = response.data;
       })
-      .catch(error => {
-        this.$data.ready = true;
-      });
+      .catch(error => {});
 
     HTTP.get(URL.getSale)
       .then(response => {
         this.$data.sales = response.data;
       })
-      .catch(error => {
-        this.$data.ready = true;
-      });
+      .catch(error => {});
   },
   computed: {},
   methods: {
