@@ -1,14 +1,14 @@
 <template>
   <div id="page-forms">
-    <div v-if="!ready" class="text-xs-center">
-      <v-progress-circular indeterminate color="primary" :size="70"></v-progress-circular>
-    </div>
-    <v-container v-if="ready" grid-list-xl fluid>
+    <v-container grid-list-xl fluid>
       <v-layout row wrap>
-        <router-link to="/quotation/add" tag="button">
-          <v-btn color="success" class="text-lg-right">Add new quotation</v-btn>
+        <router-link to="/item/add" tag="button">
+          <v-btn color="success" class="text-lg-right">Add new item</v-btn>
         </router-link>
-        <v-flex lg12 text-xs-right>
+        <div v-if="!ready" class="text-xs-center">
+          <v-progress-circular indeterminate color="primary" :size="70"></v-progress-circular>
+        </div>
+        <v-flex v-if="ready" lg12 text-xs-right>
           <v-card class="pa-12">
             <v-data-table :headers="headers" :items="quotations" class="elevation-1">
               <template v-slot:items="props">
@@ -36,15 +36,16 @@
 </template>
 
 <script>
-import { HTTP } from "@/api/http-common";
+import { HTTP, URL } from "@/api/http-common";
 import Quotation from "@/api/quotations/quotation";
 import { error } from "util";
+import { setTimeout } from "timers";
 export default {
   components: {},
   data() {
     return {
       headers: [
-        { text: "ID", align: "left", value: "id" },
+        { text: "Code", align: "left", value: "id" },
         { text: "Customer name", align: "left", value: "name" },
         { text: "Customer code", align: "left", value: "code" },
         { text: "Currency", align: "left", value: "currency" },
@@ -52,14 +53,13 @@ export default {
         { text: "Series", align: "left", value: "series" },
         { text: "", align: "left", value: "" }
       ],
-      quotations: []
+      quotations: Quotation,
+      ready: false
     };
   },
   created() {
     HTTP.get(URL.getItem)
-      .then(response => {
-        console.log(response)        
-      })
+      .then(response => {})
       .catch(error => {
         this.$data.ready = true;
       });

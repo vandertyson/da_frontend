@@ -504,5 +504,14 @@ export default [
       `@/views/dat/quotation/AddQuotation.vue`
     )
   },
+  {
+    path: '/item',
+    meta: { breadcrumb: true },
+    name: 'item',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/item/ListItem.vue`
+    )
+  },
   
 ];

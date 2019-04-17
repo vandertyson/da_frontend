@@ -1,7 +1,13 @@
-const DatMenu = [    
+const DatMenu = [
+    {
+        title: 'Item Management',
+        group: 'Main',
+        icon: 'add_shopping_cart',
+        name: 'item',
+    },
     {
         title: 'Quotation Management',
-        group: 'quotations',
+        group: 'Main',
         icon: 'receipt',
         name: 'quotation',
     },
