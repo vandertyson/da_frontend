@@ -6,7 +6,7 @@ export const URL = {
   "getItem": SERVER + "/item/items",
   "getCustomer": SERVER + "/customer/customers",
   "getEmployee": SERVER + "/employee/employees",
-  "getSale": SERVER + "/quotation/saleEmployees",
+  "getSale": SERVER + "/quotation/saleEmployee",
 }
 
 export const HTTP = axios.create({
