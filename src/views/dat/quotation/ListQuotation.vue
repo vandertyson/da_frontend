@@ -52,13 +52,16 @@ export default {
         { text: "Series", align: "left", value: "series" },
         { text: "", align: "left", value: "" }
       ],
-      quotations: []
+      quotations: [],
+      ready: false
     };
   },
   created() {
     HTTP.get(URL.getQuot)
       .then(response => {
-        console.log(response)        
+        ready = true;
+        console.log(response)       
+        this.$data.quotations = response 
       })
       .catch(error => {
         this.$data.ready = true;
