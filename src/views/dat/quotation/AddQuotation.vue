@@ -10,6 +10,7 @@
             <v-card class="pa-4">
               <h4 class="headline mb-0">Thông tin chung</h4>
               <v-autocomplete
+                v-model="selectedCustomer"
                 label="Nhập mã khách hàng"
                 :items="customers"
                 item-text="code"
@@ -23,7 +24,22 @@
                 >{{ data.item.code }} - {{ data.item.name }}</template>
                 <template slot="item" slot-scope="data">{{ data.item.code }} - {{ data.item.name }}</template>
               </v-autocomplete>
-              <v-text-field label="Nhập tên người đại diện" v-model="contactpersonname"></v-text-field>
+
+              <v-autocomplete
+                v-model="selected_contact_person"
+                label="Nhập mã người liên hệ"
+                :items="contacts"
+                item-text="name"
+                item-value="code"
+                :rules="[(v) => !!v || 'Phải nhập nguoi lien he']"
+              >
+                <template
+                  slot="selection"
+                  slot-scope="data"
+                >{{ data.item.code }} - {{ data.item.name }}</template>
+                <template slot="item" slot-scope="data">{{ data.item.code }} - {{ data.item.name }}</template>
+              </v-autocomplete>
+
               <v-select label="Chọn currency" :items="currency" v-model="selected_currency"></v-select>
               <v-menu
                 v-model="menu_doc_date"
@@ -71,11 +87,11 @@
                 <v-date-picker v-model="taxdate" @input="menu_tax_date = false"></v-date-picker>
               </v-menu>
               <v-autocomplete
+                v-model="selectedSale"
                 label="Nhân viên bán hàng"
                 :items="sales"
                 item-text="name"
                 item-value="code"
-                v-on:change="saleSelect"
                 :rules="[(v) => !!v || 'Phải nhập nhân viên bán hàng']"
               >
                 <template
@@ -85,11 +101,11 @@
                 <template slot="item" slot-scope="data">{{ data.item.code }} - {{ data.item.name }}</template>
               </v-autocomplete>
               <v-autocomplete
+                v-model="selectedEmployee"
                 label="Nhân viên nhập chứng từ"
                 :items="employees"
                 item-text="name"
                 item-value="id"
-                v-on:change="employeeSelect"
                 :rules="[(v) => !!v || 'Phải nhập nhân viên chứng từ']"
               >
                 <template
@@ -136,7 +152,7 @@
                   <v-text-field
                     label="Nhập chiết khấu (%)"
                     type="number"
-                    v-model="current_item.chiet_khau"
+                    v-model="current_item.discount"
                   ></v-text-field>
                 </v-flex>
                 <v-flex md1>
@@ -148,12 +164,12 @@
               <v-divider></v-divider>
               <v-data-table :headers="headers" :items="selected_items" class="elevation-1 mt-4">
                 <template v-slot:items="props">
-                  <td class="text-xs-left">{{ props.item.code }}</td>
-                  <td class="text-xs-left">{{ props.item.name }}</td>
+                  <td class="text-xs-left">{{ props.item.code || props.item.itemcode }}</td>
+                  <td class="text-xs-left">{{ props.item.name || props.item.description }}</td>
                   <td class="text-xs-left">{{ props.item.quantity }}</td>
                   <td class="text-xs-left">{{ formatMoney(props.item.price, 0, ".", ",") }}</td>
-                  <td class="text-xs-left">{{ props.item.chiet_khau }}</td>
-                  <td class="text-xs-left">{{ props.item.vat }}</td>
+                  <td class="text-xs-left">{{ props.item.discount || 0 }}</td>
+                  <td class="text-xs-left">{{ props.item.vat || 0}}</td>
                   <td class="text-xs-left">{{ formatMoney(props.item.total, 0, ".", ",") }}</td>
                   <td class="text-xs-left">{{ props.item.uom_code }}</td>
                   <td class="text-xs-left">
@@ -208,6 +224,7 @@ import { HTTP, URL } from "@/api/http-common";
 // import Customer from "@/api/quotations/customer";
 // import Countries from "@/api/country";
 import Currency from "@/api/quotations/currency";
+import { setTimeout } from "timers";
 // import Sales from "@/api/quotations/sales";
 // import Employees from "@/api/quotations/employee";
 // import Items from "@/api/quotations/item";
@@ -216,6 +233,7 @@ export default {
   components: {},
   data() {
     return {
+      id: null,
       headers: [
         { text: "Mã hàng hóa", align: "left" },
         { text: "Mô tả hàng hóa", align: "left" },
@@ -229,8 +247,11 @@ export default {
       ],
       ready: false,
       customers: [],
+      contacts: [],
       selectedCustomer: null,
-      contactpersonname: null,
+      selectedCustomerObj: null,
+      selected_contact_person: null,
+      selected_contact: null,
       selectedSale: null,
       selectedEmployee: null,
       currency: Currency,
@@ -266,7 +287,44 @@ export default {
     HTTP.get(URL.getCustomer)
       .then(response => {
         this.$data.customers = response.data;
-        this.$data.ready = true;
+        if (this.$route.params.id) {
+          this.$data.id = this.$route.params.id;
+          HTTP.get(URL.getContacts)
+            .then(response => {
+              this.$data.contacts = response.data;
+              HTTP.get(URL.getQuotById + this.$data.id)
+                .then(response => {
+                  console.log(response.data);
+                  //doan nay la goi len server lay cai object cu ve theo id. xong gan lai vao cac cai bien o tren la dc
+                  this.$data.selectedCustomer = response.data.code;
+                  this.customnerSelect(response.data.code);
+                  this.$data.selected_contact_person = parseInt(response.data.contactCode)
+                  this.$data.selectedSale = parseInt(
+                    response.data.saleEmployee
+                  );
+                  this.$data.selectedEmployee = parseInt(
+                    response.data.employee
+                  );
+                  this.$data.selected_items = response.data.listItem;
+                  this.$data.duedate = response.data.dueDate;
+                  this.$data.docdate = response.data.docDate;
+                  this.$data.selected_currency = response.data.currency;
+                  this.calculate_sum();
+                  this.$data.ready = true;
+                })
+                .catch(error => {
+                  this.$data.ready = true;
+                });
+            })
+            .catch(error => {});
+        } else {
+          HTTP.get(URL.getContacts)
+            .then(response => {
+              this.$data.contacts = response.data;
+            })
+            .catch(error => {});
+          this.$data.ready = true;
+        }
       })
       .catch(error => {});
 
@@ -291,20 +349,18 @@ export default {
   computed: {},
   methods: {
     customnerSelect: function(a) {
-      this.$data.selectedCustomer = this.$data.customers.filter(function(itm) {
+      this.$data.selectedCustomerObj = this.$data.customers.filter(function(
+        itm
+      ) {
         return itm.code == a;
       })[0];
-      this.$data.contactpersonname = this.$data.selectedCustomer.contactperson;
-    },
-    saleSelect: function(a) {
-      this.$data.selectedSale = this.$data.sales.filter(function(itm) {
-        return itm.code == a;
-      })[0];
-    },
-    employeeSelect: function(a) {
-      this.$data.selectedEmployee = this.$data.employees.filter(function(itm) {
-        return itm.id == a;
-      })[0];
+      var name = this.$data.selectedCustomerObj.contactperson;
+      var available_contacts = this.$data.contacts.filter(function(itm) {
+        return itm.name == name;
+      });
+      if (available_contacts.length > 0) {        
+        this.$data.selected_contact_person = available_contacts[0].code;
+      }
     },
     itemSelect: function(a) {
       this.$data.current_item.item = this.$data.items.filter(function(itm) {
@@ -317,21 +373,22 @@ export default {
         name: this.$data.current_item.item.name,
         quantity: this.$data.current_item.quantity,
         price: this.$data.current_item.price,
-        chiet_khau: this.$data.current_item.chiet_khau,
+        discount: this.$data.current_item.discount,
         vat: this.$data.current_item.item.vat,
-        total: this.calculate_total(),
+        total: this.calculate_total(this.$data.current_item),
         uom_code: this.$data.current_item.item.uom_code
       };
       console.log(row);
       this.$data.selected_items.push(row);
       this.calculate_sum();
     },
-    calculate_total: function() {
+    calculate_total: function(item) {      
+      var ck = item.discount || item.taxcode;
+      console.log( item.quantity * item.price * (1 + item.vat / 100) * (1 - ck / 100))
+      console.log(ck)
+      console.log(item)
       return (
-        this.$data.current_item.quantity *
-        this.$data.current_item.price *
-        (1 + this.$data.current_item.item.vat / 100) *
-        (1 - this.$data.current_item.chiet_khau / 100)
+        item.quantity * item.price * (1 + item.item.vat / 100) * (1 - ck / 100)
       );
     },
     calculate_sum: function() {
@@ -386,6 +443,7 @@ export default {
     },
     save: function() {
       if (!this.$refs.form.validate()) {
+        this.$data.message = "Một số trường chưa được nhập. Không thể lưu";
         this.snackbar = true;
         return;
       }
@@ -396,44 +454,64 @@ export default {
         this.$data.message = "Phải thêm mặt hàng trong phần chi tiết báo giá";
         this.$data.snackbar = true;
         return;
-      }
+      }      
       var post_param = {
-        name: this.$data.selectedCustomer.name,
-        code: this.$data.selectedCustomer.code,
-        saleemployee: this.$data.selectedSale.code,
-        employee: this.$data.selectedEmployee.id,
-        contactpersonname: this.$data.selectedCustomer.contactperson,
-        docdate: this.$data.docdate,
-        duedate: this.$data.duedate,
-        taxdate: this.$data.taxdate,
+        name: this.$data.selectedCustomerObj.name,
+        code: this.$data.selectedCustomerObj.code,
+        contactCode: this.$data.selected_contact_person,
+        saleEmployee: this.$data.selectedSale,
+        employee: this.$data.selectedEmployee,        
+        docDate: this.$data.docdate,
+        dueDate: this.$data.duedate,
+        taxDate: this.$data.taxdate,
+        currency: this.$data.selected_currency,
+        docstatus: "O",                  
         listItem: []
       };
       var si = this.$data.selected_items;
       for (let i = 0; i < si.length; i++) {
         post_param.listItem.push({
-          itemcode: si[i].code,
-          description: si[i].name,
+          itemcode: si[i].code || si[i].itemcode,
+          description: si[i].name || si[i].description,
           quantity: si[i].quantity,
           price: si[i].price,
-          vatgroup: si[i].chiet_khau,
-          taxcode: si[i].vat,
-          total: si[i].total,
-          currency: this.$data.selected_currency
+          discount: si[i].chiet_khau || si[i].vat,
+          vat: si[i].vat || 10,
+          total: si[i].total || this.calculate_total(si[i]),
+          currency: this.$data.selected_currency,
+          uomcode: si[i].uomcode
         });
       }
-      console.log(post_param);
 
-      HTTP.post(URL.addQuot, post_param)
-        .then(response => {
-          this.posts = response.data;
-          this.$data.message = "Quotaion added successfully!";
-          this.$data.snackbar = true;
-        })
-        .catch(e => {
-          console.log(e);
-          this.$data.message = "Some errors happened!";
-          this.$data.snackbar = true;
-        });
+      //có id tức là đang sửa. ko có tức là đang thêm
+      if (this.$data.id) {
+        post_param["id"] = this.$data.id;
+        console.log(post_param);
+        HTTP.put(URL.updateQuotation, post_param)
+          .then(response => {
+            this.posts = response.data;
+            this.$data.message = "Quotaion editted successfully!";
+            this.$data.snackbar = true;
+          })
+          .catch(e => {
+            console.log(e);
+            this.$data.message = "Some errors happened!";
+            this.$data.snackbar = true;
+          });
+      } else {
+        console.log(post_param);
+        HTTP.post(URL.addQuot, post_param)
+          .then(response => {
+            this.posts = response.data;
+            this.$data.message = "Quotaion added successfully!";
+            this.$data.snackbar = true;
+          })
+          .catch(e => {
+            console.log(e);
+            this.$data.message = "Some errors happened!";
+            this.$data.snackbar = true;
+          });
+      }
     }
   }
 };

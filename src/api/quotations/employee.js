@@ -1,56 +1,132 @@
 export default [
-    {
-        "id": 1,
-        "firstname": "Khanh",
-        "lastname": "Tăng Văn",
-        "dept": 21
-    },
-    {
-        "id": 3,
-        "firstname": "Anh",
-        "lastname": "Đào Ngọc",
-        "dept": 6
-    },
-    {
-        "id": 4,
-        "firstname": "Anh",
-        "lastname": "Đoàn Thị Phương",
-        "dept": 6
-    },
-    {
-        "id": 5,
-        "firstname": "Anh",
-        "lastname": "Tạ Quang",
-        "dept": 1
-    },
-    {
-        "id": 6,
-        "firstname": "Anh",
-        "lastname": "Nguyễn Kim",
-        "dept": 3
-    },
-    {
-        "id": 7,
-        "firstname": "Anh",
-        "lastname": "Nguyễn Đức",
-        "dept": 4
-    },
-    {
-        "id": 8,
-        "firstname": "Anh",
-        "lastname": "Trương Thị Ngọc",
-        "dept": 27
-    },
-    {
-        "id": 9,
-        "firstname": "Anh",
-        "lastname": "Trần Lê",
-        "dept": 18
-    },
-    {
-        "id": 10,
-        "firstname": "Anh",
-        "lastname": "Nguyễn Đức",
-        "dept": 14
-    }
+        {
+            "id": 1,
+            "firstname": "Khanh",
+            "lastname": "Tăng Văn",
+            "dept": 21,
+            "sex": "M",
+            "jobtitle": "Tổng GĐ",
+            "email": null,
+            "homecity": "Bắc Từ Liêm",
+            "updatedate": "2019-01-26",
+            "usersign": 26,
+            "deptname": "Kenh ban buon HN"
+        },
+        {
+            "id": 2,
+            "firstname": "D?t",
+            "lastname": "Tr?n Minh",
+            "dept": 1,
+            "sex": "M",
+            "jobtitle": null,
+            "email": null,
+            "homecity": null,
+            "updatedate": null,
+            "usersign": 0,
+            "deptname": "Phòng RD"
+        },
+        {
+            "id": 3,
+            "firstname": "Anh",
+            "lastname": "Đào Ngọc",
+            "dept": 6,
+            "sex": "M",
+            "jobtitle": "NV lái xe",
+            "email": null,
+            "homecity": "Đan Phượng",
+            "updatedate": "2018-04-23",
+            "usersign": 1,
+            "deptname": "Phòng HCNS"
+        },
+        {
+            "id": 4,
+            "firstname": "Anh",
+            "lastname": "Đoàn Thị Phương",
+            "dept": 6,
+            "sex": "F",
+            "jobtitle": "CV quản trị đào tạo",
+            "email": "phuonganhdt@kgvietnam.com",
+            "homecity": "Huyện Thủy Nguyên",
+            "updatedate": "2018-04-23",
+            "usersign": 1,
+            "deptname": "Phòng HCNS"
+        },
+        {
+            "id": 5,
+            "firstname": "Anh",
+            "lastname": "Tạ Quang",
+            "dept": 1,
+            "sex": "M",
+            "jobtitle": "CV R&D",
+            "email": "anhtq@kgvietnam.com",
+            "homecity": "Thanh Xuân",
+            "updatedate": "2018-04-23",
+            "usersign": 1,
+            "deptname": "Phòng RD"
+        },
+        {
+            "id": 6,
+            "firstname": "Anh",
+            "lastname": "Nguyễn Kim",
+            "dept": 3,
+            "sex": "F",
+            "jobtitle": "TP Kế hoạch",
+            "email": "anhnk@kgvietnam.com",
+            "homecity": "Thanh Xuân",
+            "updatedate": "2018-04-23",
+            "usersign": 1,
+            "deptname": "Phòng kế hoạch"
+        },
+        {
+            "id": 7,
+            "firstname": "Anh",
+            "lastname": "Nguyễn Đức",
+            "dept": 4,
+            "sex": "M",
+            "jobtitle": "Photographer",
+            "email": "anhnd@kgvietnam.com",
+            "homecity": "TP Hải Dương",
+            "updatedate": "2018-04-23",
+            "usersign": 1,
+            "deptname": "Phòng MKT"
+        },
+        {
+            "id": 8,
+            "firstname": "Anh",
+            "lastname": "Trương Thị Ngọc",
+            "dept": 27,
+            "sex": "F",
+            "jobtitle": "Công nhân may",
+            "email": null,
+            "homecity": "Phúc Thọ",
+            "updatedate": "2018-04-23",
+            "usersign": 1,
+            "deptname": "NM khối s/xuất"
+        },
+        {
+            "id": 9,
+            "firstname": "Anh",
+            "lastname": "Trần Lê",
+            "dept": 18,
+            "sex": "F",
+            "jobtitle": "Đại diện thương mại",
+            "email": "dongnd01@kgvietnam.com",
+            "homecity": "Thành Phố Vinh",
+            "updatedate": "2018-04-23",
+            "usersign": 1,
+            "deptname": "Kênh Kwin mien bac"
+        },
+        {
+            "id": 10,
+            "firstname": "Anh",
+            "lastname": "Nguyễn Đức",
+            "dept": 14,
+            "sex": "M",
+            "jobtitle": "Đại diện thương mại",
+            "email": "anhnd02@kgvietnam.com",
+            "homecity": "Thủy Nguyên",
+            "updatedate": "2018-04-23",
+            "usersign": 1,
+            "deptname": "FSTHN"
+        }
 ]

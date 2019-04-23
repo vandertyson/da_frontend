@@ -505,6 +505,15 @@ export default [
     )
   },
   {
+    path: '/quotation/edit/:id',
+    meta: { breadcrumb: true },
+    name: 'quotation/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/quotation/AddQuotation.vue`
+    )
+  },
+  {
     path: '/item',
     meta: { breadcrumb: true },
     name: 'item',
@@ -513,5 +522,77 @@ export default [
       `@/views/dat/item/ListItem.vue`
     )
   },
-  
+  {
+    path: '/item/add',
+    meta: { breadcrumb: true },
+    name: 'item/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/item/AddItem.vue`
+    )
+  },
+  {
+    path: '/item/edit/:code',
+    meta: { breadcrumb: true },
+    name: 'item/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/item/AddItem.vue`
+    )
+  },
+  {
+    path: '/customer',
+    meta: { breadcrumb: true },
+    name: 'customer',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/Customer/ListCustomer.vue`
+    )
+  },
+  {
+    path: '/customer/add',
+    meta: { breadcrumb: true },
+    name: 'customer/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/Customer/AddCustomer.vue`
+    )
+  },
+  {
+    path: '/customer/edit/:code',
+    meta: { breadcrumb: true },
+    name: 'customer/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/Customer/AddCustomer.vue`
+    )
+  },
+  {
+    path: '/employee',
+    meta: { breadcrumb: true },
+    name: 'employee',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/employee/ListEmployee.vue`
+    )
+  },
+  {
+    path: '/employee/add',
+    meta: { breadcrumb: true },
+    name: 'employee/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/employee/AddEmployee.vue`
+    )
+  },
+  {
+    path: '/employee/edit/:id',
+    meta: { breadcrumb: true },
+    name: 'employee/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/employee/AddEmployee.vue`
+    )
+  }
+
 ];

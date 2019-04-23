@@ -10,7 +10,12 @@
         </router-link>
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
-            <v-data-table :headers="headers" :items="quotations" class="elevation-1">
+            <v-data-table
+              :headers="headers"
+              :items="quotations"
+              class="elevation-1"
+              v-bind:disable-initial-sort="true"
+            >
               <template v-slot:items="props">
                 <td class="text-xs-left">{{ props.item.id }}</td>
                 <td class="text-xs-left">{{ props.item.name }}</td>
@@ -22,17 +27,19 @@
                 >{{ getName(props.item.emfirstname, props.item.emplastname) }}</td>
                 <td class="text-xs-left">{{ props.item.dueDate }}</td>
                 <td class="text-xs-left">
-                  <router-link to="/quotation/add" tag="button">
+                  <router-link v-bind:to="getEditRoute(props.item.id)" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
                   </router-link>
-                  <router-link to="/quotation/edit" tag="button">
-                    <v-btn flat small color="error">Delete</v-btn>
-                  </router-link>
+                  <v-btn flat small color="error" v-on:click="deleteQuot(props.item.id)">Delete</v-btn>
                 </td>
               </template>
             </v-data-table>
           </v-card>
         </v-flex>
+        <v-snackbar v-model="snackbar" top :timeout="3000">
+          {{message}}
+          <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-layout>
     </v-container>
   </div>
@@ -57,27 +64,50 @@ export default {
         { text: "", align: "left", value: "" }
       ],
       quotations: [],
-      ready: false
+      ready: false,
+      //sủa biến này thành true thì nó sẽ hiện len
+      snackbar: false,
+      message: null
     };
   },
   created() {
-    console.log(URL.getQuot);
-    HTTP.get(URL.getQuot)
-      .then(response => {
-        this.$data.ready = true;
-        this.$data.quotations = response.data;
-      })
-      .catch(error => {
-        this.$data.ready = true;
-      });
+    this.loadData();
   },
   computed: {},
   methods: {
+    loadData: function() {
+      this.$data.ready = false;
+      HTTP.get(URL.getQuot)
+        .then(response => {
+          this.$data.ready = true;
+          this.$data.quotations = response.data;
+        })
+        .catch(error => {
+          this.$data.ready = true;
+        });
+    },
+    getEditRoute: function(id) {
+      return "/quotation/edit/" + id;
+    },
     getName: function(first_name, last_name) {
       if (first_name && last_name) {
         return last_name + " " + first_name;
       }
       return "N/A";
+    },
+    deleteQuot: function(quotID) {
+      if (confirm("Bạn có chăc chắn muốn xóa?")) {
+        HTTP.delete(URL.deleteQuot + quotID)
+          .then(response => {
+            this.$data.message = "Đã xóa thành công. Đang tải lại dữ liệu ...";
+            this.snackbar = true;
+            this.loadData();
+          })
+          .catch(error => {
+            this.$data.message = "Đã có lỗi không xóa được";
+            this.snackbar = true;
+          });
+      }
     }
   }
 };
