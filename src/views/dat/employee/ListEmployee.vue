@@ -8,6 +8,14 @@
         <router-link to="/employee/add" tag="button">
           <v-btn color="success" class="text-lg-right">Add new Employee</v-btn>
         </router-link>
+        <v-flex md6>
+          <v-text-field
+            label="Search Employee"
+            v-model="empName"
+            append-icon="search"
+            v-on:keyup.enter="searchEmployee()"
+          ></v-text-field>
+        </v-flex>
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
             <v-data-table :headers="headers" :items="employees" class="elevation-1">
@@ -22,23 +30,20 @@
                 <td class="text-xs-left">{{ props.item.updatedate }}</td>
 
                 <td class="text-xs-left">
-                  <router-link to="/quotation/add" tag="button">
+                  <router-link v-bind:to="getEditRoute(props.item.id)" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
                   </router-link>
-                  <router-link to="/quotation/edit" tag="button">
-                    <v-btn
-                      flat
-                      small
-                      color="error"
-                      v-on:click="deleteEmployee(props.item.id)"
-                    >Delete</v-btn>
-                  </router-link>
+                  <v-btn flat small color="error" v-on:click="deleteEmployee(props.item.id)">Delete</v-btn>
                 </td>
               </template>
             </v-data-table>
           </v-card>
         </v-flex>
       </v-layout>
+      <v-snackbar v-model="snackbar" top :timeout="3000">
+        {{message}}
+        <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
     </v-container>
   </div>
 </template>
@@ -64,7 +69,8 @@ export default {
       employees: [],
       ready: false,
       snackbar: false,
-      message: null
+      message: null,
+      empName: null
     };
   },
   created() {
@@ -106,6 +112,20 @@ export default {
             this.snackbar = true;
           });
       }
+    },
+    searchEmployee: function() {
+      HTTP.get(URL.getEmployee, {
+        params: {
+          name: this.$data.empName
+        }
+      })
+        .then(response => {
+          this.$data.employees = response.data;
+        })
+        .catch(error => {
+          this.$data.message = "Đã có lỗi";
+          this.snackbar = true;
+        });
     }
   }
 };

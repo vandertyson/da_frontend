@@ -8,6 +8,14 @@
         <router-link to="/customer/add" tag="button">
           <v-btn color="success" class="text-lg-right">Add new Customer</v-btn>
         </router-link>
+        <v-flex md6>
+          <v-text-field
+            label="Search Customer"
+            v-model="customerName"
+            append-icon="search"
+            v-on:keyup.enter="searchCustomer()"
+          ></v-text-field>
+        </v-flex>
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
             <v-data-table :headers="headers" :items="customers" class="elevation-1">
@@ -20,23 +28,25 @@
                 <td class="text-xs-left">{{ props.item.phone1 }}</td>
                 <td class="text-xs-left">{{ props.item.createdate }}</td>
                 <td class="text-xs-left">
-                  <router-link to="/quotation/add" tag="button">
+                  <router-link v-bind:to="getEditRoute(props.item.code)" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
                   </router-link>
-                  <router-link to="/quotation/edit" tag="button">
-                    <v-btn
-                      flat
-                      small
-                      color="error"
-                      v-on:click="deleteCustomer(props.item.code)"
-                    >Delete</v-btn>
-                  </router-link>
+                  <v-btn
+                    flat
+                    small
+                    color="error"
+                    v-on:click="deleteCustomer(props.item.code)"
+                  >Delete</v-btn>
                 </td>
               </template>
             </v-data-table>
           </v-card>
         </v-flex>
       </v-layout>
+      <v-snackbar v-model="snackbar" top :timeout="3000">
+        {{message}}
+        <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
     </v-container>
   </div>
 </template>
@@ -49,8 +59,8 @@ export default {
   data() {
     return {
       headers: [
-        { text: "Customer name", align: "left", value: "code" },
-        { text: "Customer code", align: "left", value: "name" },
+        { text: "Customer code", align: "left", value: "code" },
+        { text: "Customer name", align: "left", value: "name" },
         { text: "Contact person", align: "left", value: "contactperson" },
         { text: "Email", align: "left", value: "email" },
         { text: "Fax", align: "left", value: "fax" },
@@ -61,7 +71,8 @@ export default {
       customers: [],
       ready: false,
       snackbar: false,
-      message: null
+      message: null,
+      customerName: null
     };
   },
   created() {
@@ -71,7 +82,6 @@ export default {
   methods: {
     loadData: function() {
       this.$data.ready = false;
-      //console.log(URL.getCustomer);
       HTTP.get(URL.getCustomer)
         .then(response => {
           this.$data.ready = true;
@@ -97,6 +107,20 @@ export default {
             this.snackbar = true;
           });
       }
+    },
+    searchCustomer: function() {
+      HTTP.get(URL.getCustomer, {
+        params: {
+          name: this.$data.customerName
+        }
+      })
+        .then(response => {
+          this.$data.customers = response.data;
+        })
+        .catch(error => {
+          this.$data.message = "Đã có lỗi";
+          this.snackbar = true;
+        });
     }
   }
 };

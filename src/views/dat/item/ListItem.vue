@@ -8,6 +8,14 @@
         <router-link to="/item/add" tag="button">
           <v-btn color="success" class="text-lg-right">Add new item</v-btn>
         </router-link>
+        <v-flex md6>
+          <v-text-field
+            label="Search Item"
+            v-model="itemName"
+            append-icon="search"
+            v-on:keyup.enter="searchItem()"
+          ></v-text-field>
+        </v-flex>
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
             <v-data-table :headers="headers" :items="items" class="elevation-1">
@@ -17,8 +25,9 @@
                 <td class="text-xs-left">{{ props.item.groupname }}</td>
                 <td class="text-xs-left">{{ props.item.onhand }}</td>
                 <td class="text-xs-left">{{ props.item.uomcode }}</td>
+                <td class="text-xs-left">{{ props.item.createdate }}</td>
                 <td class="text-xs-left">
-                  <router-link v-bind:to="getEditRoute(props.item.id)" tag="button">
+                  <router-link v-bind:to="getEditRoute(props.item.code)" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
                   </router-link>
                   <v-btn flat small color="error" v-on:click="deleteItem(props.item.code)">Delete</v-btn>
@@ -28,6 +37,10 @@
           </v-card>
         </v-flex>
       </v-layout>
+      <v-snackbar v-model="snackbar" top :timeout="3000">
+        {{message}}
+        <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
     </v-container>
   </div>
 </template>
@@ -46,12 +59,14 @@ export default {
         { text: "Item group", align: "left", value: "groupname" },
         { text: "In Stock", align: "left", value: "onhand" },
         { text: "Unit", align: "left", value: "uomcode" },
+        { text: "Create Date", align: "left", value: "createdate" },
         { text: "", align: "left", value: "" }
       ],
       items: [],
       ready: false,
       snackbar: false,
-      message: null
+      message: null,
+      itemName: null
     };
   },
   created() {
@@ -86,6 +101,20 @@ export default {
             this.snackbar = true;
           });
       }
+    },
+    searchItem: function() {
+      HTTP.get(URL.getItem, {
+        params: {
+          name: this.$data.itemName
+        }
+      })
+        .then(response => {
+          this.$data.items = response.data;
+        })
+        .catch(error => {
+          this.$data.message = "Đã có lỗi";
+          this.snackbar = true;
+        });
     }
   }
 };

@@ -5,6 +5,7 @@ export const URL = {
   "addQuot": SERVER + "/quotation/addQuotation",
   "getQuotById": SERVER + "/quotation/quotation/",
   "getItem": SERVER + "/item/items",
+  "getItembyId": SERVER + "/item/item/",
   "getCustomer": SERVER + "/customer/customers",
   "getEmployee": SERVER + "/employee/employees",
   "getSale": SERVER + "/quotation/saleEmployee",

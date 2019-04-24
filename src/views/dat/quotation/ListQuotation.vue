@@ -36,11 +36,11 @@
             </v-data-table>
           </v-card>
         </v-flex>
-        <v-snackbar v-model="snackbar" top :timeout="3000">
-          {{message}}
-          <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
-        </v-snackbar>
       </v-layout>
+      <v-snackbar v-model="snackbar" top :timeout="3000">
+        {{message}}
+        <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
     </v-container>
   </div>
 </template>

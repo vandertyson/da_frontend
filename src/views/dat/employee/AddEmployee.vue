@@ -34,7 +34,7 @@
           </v-flex>
 
           <v-layout align-end justify-end class="mr-4">
-            <router-link to="/quotation" tag="button">
+            <router-link to="/employee" tag="button">
               <v-btn primary large>CANCEL</v-btn>
             </router-link>
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
