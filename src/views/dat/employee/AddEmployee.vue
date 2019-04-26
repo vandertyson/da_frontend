@@ -28,7 +28,7 @@
                 <template v-slot:activator="{ on }">
                   <v-text-field v-model="updatedate" label="Ngày cập nhật" readonly v-on="on"></v-text-field>
                 </template>
-                <v-date-picker v-model="docdate" @input="menu_update_date = false"></v-date-picker>
+                <v-date-picker v-model="updatedate" @input="menu_update_date = false"></v-date-picker>
               </v-menu>
             </v-card>
           </v-flex>
@@ -70,12 +70,32 @@ export default {
       email: "",
       jobtitle: "",
       homecity: "",
+      updatedate: new Date().toISOString().substr(0, 10),
+      menu_update_date:false,
       valid: false,
       snackbar: false,
       message: null
     };
   },
-  created() {},
+  created() {
+        if (this.$route.params.id) {
+      HTTP.get(URL.getEmployeebyId + "/" + this.$route.params.id)
+        .then(response => {
+          //doan nay gan lai cac bien vao trong
+          console.log(response.data);
+          this.$data.id = response.data.id;
+          this.$data.firstname = response.data.firstname;
+          this.$data.lastname = response.data.lastname;
+          this.$data.sex = response.data.sex;
+          this.$data.dept = response.data.dept;
+          this.$data.email = response.data.email;
+          this.$data.jobtitle = response.data.jobtitle;
+          this.$data.homecity = response.data.homecity;
+          this.$data.updatedate = response.data.updatedate;
+        })
+        .catch(error => {});
+    }    
+  },
   computed: {},
   methods: {
     save: function() {
@@ -84,9 +104,25 @@ export default {
         firstname: this.$data.firstname,
         lastname: this.$data.lastname,
         sex: this.$data.vat,
-        dept: this.$data.dept
+        dept: this.$data.dept,
+        email: this.$data.email,
+        jobtitle: this.$data.jobtitle,
+        homecity: this.$data.homecity,
+        updatedate: this.$data.updatedate
       };
 
+      if(this.$route.params.id){
+        post_param["id"] = this.$route.params.id
+        HTTP.put(URL.updateEmployee, post_param)
+          .then(response => {            
+            this.$data.message = "Employee editted successfully!";
+            this.$data.snackbar = true;
+          })
+          .catch(e => {            
+            this.$data.message = "Some errors happened!";
+            this.$data.snackbar = true;
+          });
+      } else {
       HTTP.post(URL.addNewEmployee, post_param)
         .then(response => {
           this.posts = response.data;
@@ -98,6 +134,7 @@ export default {
           this.$data.message = "Some errors happened!";
           this.$data.snackbar = true;
         });
+      }
     }
   }
 };

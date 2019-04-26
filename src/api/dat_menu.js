@@ -27,19 +27,19 @@ const DatMenu = [
         title: 'Sales Order Management',
         group: 'Main',
         icon: 'assignment_turned_in',
-        name: 'quotation',
+        name: 'order',
     },
     {
         title: 'Delivery Management',
         group: 'Main',
         icon: 'assignment_turned_in',
-        name: 'quotation',
+        name: 'delivery',
     },
     {
         title: 'AR Invoice Management',
         group: 'Main',
         icon: 'assignment_turned_in',
-        name: 'quotation',
+        name: 'invoice',
     },
     
 ];

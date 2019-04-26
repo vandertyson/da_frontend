@@ -593,6 +593,33 @@ export default [
       /* webpackChunkName: "routes" */
       `@/views/dat/employee/AddEmployee.vue`
     )
+  },
+  {
+    path: '/order',
+    meta: { breadcrumb: true },
+    name: 'order',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/order/ListOrder.vue`
+    )
+  },
+  {
+    path: '/order/add',
+    meta: { breadcrumb: true },
+    name: 'order/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/order/AddOrder.vue`
+    )
+  },
+  {
+    path: '/order/edit/:id',
+    meta: { breadcrumb: true },
+    name: 'order/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/order/AddOrder.vue`
+    )
   }
 
 ];

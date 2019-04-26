@@ -31,7 +31,7 @@
                 :items="contacts"
                 item-text="name"
                 item-value="code"
-                :rules="[(v) => !!v || 'Phải nhập người liên hệ']"
+                :rules="[(v) => !!v || 'Phải nhập ngườii liên hệ']"
               >
                 <template
                   slot="selection"
@@ -121,9 +121,9 @@
           </v-flex>
           <v-flex md7>
             <v-card class="pa-4">
-              <h4 class="headline mb-0">Chi tiết báo giá</h4>
+              <h4 class="headline mb-0">Chi tiết đơn hàng bán</h4>
               <v-layout>
-                <v-flex md5>
+                <v-flex md4>
                   <v-autocomplete
                     label="Chọn item"
                     :items="items"
@@ -205,7 +205,7 @@
           </v-flex>
 
           <v-layout align-end justify-end class="mr-4">
-            <router-link to="/quotation" tag="button">
+            <router-link to="/order" tag="button">
               <v-btn primary large>CANCEL</v-btn>
             </router-link>
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
@@ -233,7 +233,7 @@ import { Promise } from "q";
 export default {
   components: {},
   data() {
-    return {
+    return {      
       headers: [
         { text: "Mã hàng hóa", align: "left" },
         { text: "Mô tả hàng hóa", align: "left" },
@@ -299,7 +299,7 @@ export default {
         this.$data.sales = res[4].data;
         this.$data.ready = true;
         if (this.$route.params.id) {
-          HTTP.get(URL.getQuotById + this.$route.params.id)
+          HTTP.get(URL.getOrderById + this.$route.params.id)
             .then(response => {
               console.log(response.data);
               this.$data.selectedCustomer = response.data.code;
@@ -350,7 +350,7 @@ export default {
           this.$data.selected_contact_person = available_contacts[0].code;
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
     itemSelect: function(a) {
@@ -480,10 +480,10 @@ export default {
       if (this.$route.params.id) {
         post_param["id"] = parseInt(this.$route.params.id);
         console.log(post_param);
-        HTTP.put(URL.updateQuotation, post_param)
+        HTTP.put(URL.updateOrder, post_param)
           .then(response => {
             this.posts = response.data;
-            this.$data.message = "Quotation editted successfully!";
+            this.$data.message = "SalesOrder editted successfully!";
             this.$data.snackbar = true;
           })
           .catch(e => {
@@ -493,10 +493,10 @@ export default {
           });
       } else {
         console.log(post_param);
-        HTTP.post(URL.addQuot, post_param)
+        HTTP.post(URL.addOrder, post_param)
           .then(response => {
             this.posts = response.data;
-            this.$data.message = "Quotaion added successfully!";
+            this.$data.message = "SalesOrder added successfully!";
             this.$data.snackbar = true;
           })
           .catch(e => {
