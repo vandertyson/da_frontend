@@ -1,176 +1,123 @@
 <template>
-  <div id="pageDashboard">
-    <v-flex xs6 sm4 offset-sm1>
+  <v-layout row wrap>
+    <v-flex v-if="roleID=='admin'" sm6 md6 xs12 class="pa-4">
       <v-card>
-        <v-img
-          class="white--text"
-          height="200px"
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-        >
-          <v-container fill-height fluid>
-            <v-layout fill-height>
-              <v-flex xs12 align-end flexbox>
-                <span class="headline">Top 10 Australian beaches</span>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-img>
-        <v-card-title>
-          <div>
-            <span class="grey--text">Number 10</span>
-            <br>
-            <span>Whitehaven Beach</span>
-            <br>
-            <span>Whitsunday Island, Whitsunday Islands</span>
-          </div>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn flat color="orange">Share</v-btn>
-          <v-btn flat color="orange">Explore</v-btn>
-        </v-card-actions>
+        <v-toolbar color="primary" dark>
+          <v-toolbar-title>New Quotation</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="refreshQuot()">
+            <v-icon>refresh</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-list two-line style="overflow:auto; height:400px">
+          <div v-if="quots.length == 0" class="text-lg-center display-1 mt-4">No new quotation</div>
+          <template v-for="(item, index) in quots">
+            <v-list-tile :key="index" avatar>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  <p
+                    class="hover"
+                    style="cursor: pointer"
+                    @click="gotoQuout(item.id)"
+                  >{{ item.headline }}</p>
+                </v-list-tile-title>
+                <v-list-tile-sub-title class="text--primary">{{ item.title }}</v-list-tile-sub-title>
+                <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-btn class="success">Approve</v-btn>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-divider v-if="index + 1 < quots.length" :key="`divider-${index}`"></v-divider>
+          </template>
+        </v-list>
       </v-card>
     </v-flex>
-  </div>
+    <v-flex v-if="roleID=='admin'" sm6 md6 xs12 class="pa-4">
+      <v-card>
+        <v-toolbar color="primary" dark>
+          <v-toolbar-title>New Orders</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="refreshOrder()">
+            <v-icon>refresh</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-list two-line style="overflow:auto; height:400px">
+          <div v-if="orders.length == 0" class="text-lg-center display-1 mt-4">No new order</div>
+          <template v-for="(item, index) in orders">
+            <v-list-tile :key="index" avatar ripple>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  <p
+                    class="hover"
+                    style="cursor: pointer"
+                    @click="gotoOrder(item.id)"
+                  >{{ item.headline }}</p>
+                </v-list-tile-title>
+                <v-list-tile-sub-title class="text--primary">{{ item.title }}</v-list-tile-sub-title>
+                <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-btn class="success" @click="approve()">Approve</v-btn>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-divider v-if="index + 1 < orders.length" :key="`divider-${index}`"></v-divider>
+          </template>
+        </v-list>
+      </v-card>
+    </v-flex>
+    <template v-for="stat in stats">
+      <v-flex md3 sm3 xs12 class="pa-4">
+        <v-card color="info">
+          <v-card-title primary-title class="white--text justify-center">
+            <div class="text-center display-4">{{stat.number}}</div>
+          </v-card-title>
+          <v-card-actions class="justify-center">
+            <v-btn flat dark>{{stat.name}}</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </template>
+  </v-layout>
 </template>
-
+<style scoped>
+.hover:hover {
+  color: blue;
+}
+</style>
 <script>
-import API from "@/api";
-import EChart from "@/components/chart/echart";
-import MiniStatistic from "@/components/widgets/statistic/MiniStatistic";
-import PostListCard from "@/components/widgets/card/PostListCard";
-import ProfileCard from "@/components/widgets/card/ProfileCard";
-import PostSingleCard from "@/components/widgets/card/PostSingleCard";
-import WeatherCard from "@/components/widgets/card/WeatherCard";
-import PlainTable from "@/components/widgets/list/PlainTable";
-import PlainTableOrder from "@/components/widgets/list/PlainTableOrder";
-import VWidget from "@/components/VWidget";
-import Material from "vuetify/es5/util/colors";
-import VCircle from "@/components/circle/VCircle";
-import BoxChart from "@/components/widgets/chart/BoxChart";
-import ChatWindow from "@/components/chat/ChatWindow";
-import CircleStatistic from "@/components/widgets/statistic/CircleStatistic";
-import LinearStatistic from "@/components/widgets/statistic/LinearStatistic";
+import { HTTP, URL } from "@/api/http-common";
+import AppQuot from "@/api/quotations/approve_quotation";
+import Stat from "@/api/quotations/stat";
+// import Countries from "@/api/country";
 export default {
-  components: {
-    VWidget,
-    MiniStatistic,
-    ChatWindow,
-    VCircle,
-    WeatherCard,
-    PostSingleCard,
-    PostListCard,
-    ProfileCard,
-    EChart,
-    BoxChart,
-    CircleStatistic,
-    LinearStatistic,
-    PlainTable,
-    PlainTableOrder
+  data() {
+    return {
+      roleID: localStorage.getItem("roleID"),
+      orders: [],
+      quots: [],
+      stats: []
+    };
   },
-  data: () => ({
-    color: Material,
-    selectedTab: "tab-1",
-    linearTrending: [
-      {
-        subheading: "Sales",
-        headline: "2,55",
-        caption: "increase",
-        percent: 15,
-        icon: {
-          label: "trending_up",
-          color: "success"
-        },
-        linear: {
-          value: 15,
-          color: "success"
-        }
-      },
-      {
-        subheading: "Revenue",
-        headline: "6,553",
-        caption: "increase",
-        percent: 10,
-        icon: {
-          label: "trending_down",
-          color: "error"
-        },
-        linear: {
-          value: 15,
-          color: "error"
-        }
-      },
-      {
-        subheading: "Orders",
-        headline: "5,00",
-        caption: "increase",
-        percent: 50,
-        icon: {
-          label: "arrow_upward",
-          color: "info"
-        },
-        linear: {
-          value: 50,
-          color: "info"
-        }
-      }
-    ],
-    trending: [
-      {
-        subheading: "Email",
-        headline: "15+",
-        caption: "email opens",
-        percent: 15,
-        icon: {
-          label: "email",
-          color: "info"
-        },
-        linear: {
-          value: 15,
-          color: "info"
-        }
-      },
-      {
-        subheading: "Tasks",
-        headline: "90%",
-        caption: "tasks completed.",
-        percent: 90,
-        icon: {
-          label: "list",
-          color: "primary"
-        },
-        linear: {
-          value: 90,
-          color: "success"
-        }
-      },
-      {
-        subheading: "Issues",
-        headline: "100%",
-        caption: "issues fixed.",
-        percent: 100,
-        icon: {
-          label: "bug_report",
-          color: "primary"
-        },
-        linear: {
-          value: 100,
-          color: "error"
-        }
-      }
-    ]
-  }),
-  computed: {
-    activity() {
-      return API.getActivity();
+  created() {
+    this.stats = Stat;
+    this.orders = AppQuot;
+    this.quots = AppQuot;
+  },
+  methods: {
+    refreshQuot: function() {
+      this.quots = AppQuot;
     },
-    posts() {
-      return API.getPost(3);
+    refreshOrder: function() {
+      this.orders = AppQuot;
     },
-    siteTrafficData() {
-      return API.getMonthVisit;
+    gotoQuout: function(id){
+      console.log("/quotation/edit/"+id)
+      this.$router.push("/quotation/edit/"+id)
+
     },
-    locationData() {
-      return API.getLocation;
+    gotoOrder: function(){
+      
     }
   }
 };

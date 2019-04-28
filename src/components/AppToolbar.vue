@@ -2,9 +2,9 @@
   <v-toolbar color="primary" fixed dark app>
     <v-toolbar-title class="ml-0 pl-3"></v-toolbar-title>
     <v-toolbar-side-icon @click.stop="handleDrawerToggle"></v-toolbar-side-icon>
+    <!-- <v-btn color="success" class="move_left">Success</v-btn>
     <v-btn color="success" class="move_left">Success</v-btn>
-    <v-btn color="success" class="move_left">Success</v-btn>
-    <v-btn color="success" class="move_left">Success</v-btn>  
+    <v-btn color="success" class="move_left">Success</v-btn>   -->
     <!-- <v-text-field
       flat
       solo-inverted
@@ -24,8 +24,7 @@
       transition="scale-transition"
     >
       <v-btn icon flat slot="activator">
-        <v-badge color="red" overlap>
-          <span slot="badge">3</span>
+        <v-badge color="red" overlap>          
           <v-icon medium>notifications</v-icon>
         </v-badge>
       </v-btn>
@@ -89,9 +88,10 @@ export default {
       {
         icon: "fullscreen_exit",
         href: "#",
-        title: "Logout",
+        title: "Log Out",
         click: () => {
           window.getApp.$emit("APP_LOGOUT");
+          localStorage.removeItem("roleID")
         }
       }
     ]

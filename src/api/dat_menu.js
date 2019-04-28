@@ -1,5 +1,11 @@
 const DatMenu = [
     {
+        title: 'Home',
+        group: 'Main',
+        icon: 'home',
+        name: 'dashboard',
+    },
+    {
         title: 'Item Management',
         group: 'Main',
         icon: 'offline_bolt',

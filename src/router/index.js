@@ -5,7 +5,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 Vue.use(Router);
-const router =  new Router({
+const router = new Router({
   base: '/',
   mode: 'hash',
   linkActiveClass: 'active',
@@ -13,8 +13,12 @@ const router =  new Router({
 });
 // router gards
 router.beforeEach((to, from, next) => {
-  NProgress.start();
-  next();
+  NProgress.start();  
+  if (to.path !== '/login' && localStorage.getItem("roleID") == null) {        
+    next("/login")
+  } else {        
+    next()
+  }
 });
 
 router.afterEach((to, from) => {
