@@ -9,14 +9,13 @@
 
               <v-text-field label="Nhập id nhân viên" v-model="id"></v-text-field>
               <v-text-field label="Nhập họ" v-model="firstname"></v-text-field>
-              <v-text-field label="Nhập tên" v-model="lastname"></v-text-field>
-              <v-text-field label="Nhập giới tính" v-model="sex"></v-text-field>
-              <v-text-field label="Nhập bộ phận làm việc" v-model="dept"></v-text-field>
-              <v-text-field label="Nhập email" v-model="email"></v-text-field>
-              <v-text-field label="Nhập nghề nghiệp" v-model="jobtitle"></v-text-field>
-              <v-text-field label="Nhập quê quán" v-model="homecity"></v-text-field>
+              <v-text-field
+                label="Nhập tên"
+                v-model="lastname"
+                :rules="[(v) => !!v || 'Phải nhập tên nhân viên']"
+              ></v-text-field>
               <v-menu
-                v-model="menu_update_date"
+                v-model="menu_birth_date"
                 :close-on-content-click="false"
                 :nudge-right="40"
                 lazy
@@ -26,9 +25,49 @@
                 min-width="290px"
               >
                 <template v-slot:activator="{ on }">
-                  <v-text-field v-model="updatedate" label="Ngày cập nhật" readonly v-on="on"></v-text-field>
+                  <v-text-field v-model="birthdate" label="Ngày sinh" readonly v-on="on"></v-text-field>
                 </template>
-                <v-date-picker v-model="updatedate" @input="menu_update_date = false"></v-date-picker>
+                <v-date-picker v-model="birthdate" @input="menu_birth_date = false"></v-date-picker>
+              </v-menu>
+              <v-text-field label="Nhập giới tính" v-model="sex"></v-text-field>
+              <v-autocomplete
+                v-model="selectedDept"
+                label="Bộ phận làm việc"
+                :items="dept"
+                item-text="name"
+                item-value="code"
+                :rules="[(v) => !!v || 'Phải nhập bộ phận làm việc']"
+              >
+                <template
+                  slot="selection"
+                  slot-scope="data"
+                >{{ data.item.code }} - {{ data.item.name }}</template>
+                <template slot="item" slot-scope="data">{{ data.item.code }} - {{ data.item.name }}</template>
+              </v-autocomplete>
+
+              <v-text-field label="Nhập email" v-model="email"></v-text-field>
+              <v-text-field
+                label="Nhập nghề nghiệp"
+                v-model="jobtitle"
+                :rules="[(v) => !!v || 'Phải nhập nghề nghiệp']"
+              ></v-text-field>
+              <v-text-field label="Nhập quê quán" v-model="homecity"></v-text-field>
+              <v-select label="Chọn ngân hàng" :items="bankcode" v-model="selected_bankcode"></v-select>
+              <v-text-field label="Nhập số tài khoản" v-model="bankacount"></v-text-field>
+              <v-menu
+                v-model="menu_start_date"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                lazy
+                transition="scale-transition"
+                offset-y
+                full-width
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-text-field v-model="startdate" label="Ngày cập nhật" readonly v-on="on"></v-text-field>
+                </template>
+                <v-date-picker v-model="startdate" @input="menu_start_date = false"></v-date-picker>
               </v-menu>
             </v-card>
           </v-flex>
@@ -52,7 +91,7 @@
 import { HTTP, URL } from "@/api/http-common";
 // import Customer from "@/api/quotations/customer";
 // import Countries from "@/api/country";
-import Currency from "@/api/quotations/currency";
+import Bankcode from "@/api/quotations/bankcode";
 // import Sales from "@/api/quotations/sales";
 // import Employees from "@/api/quotations/employee";
 // import Items from "@/api/quotations/item";
@@ -65,37 +104,62 @@ export default {
       id: "",
       firstname: "",
       lastname: "",
+      menu_birth_date: false,
+      birthdate: new Date().toISOString().substr(0, 10),
       sex: "",
-      dept: "",
+      selectedDept: null,
+      dept: [],
       email: "",
       jobtitle: "",
       homecity: "",
-      updatedate: new Date().toISOString().substr(0, 10),
-      menu_update_date:false,
+      bankcode: Bankcode,
+      selected_bankcode: Bankcode[0],
+      bankacount: "",
+      startdate: new Date().toISOString().substr(0, 10),
+      menu_start_date: false,
       valid: false,
       snackbar: false,
       message: null
     };
   },
   created() {
-        if (this.$route.params.id) {
-      HTTP.get(URL.getEmployeebyId + "/" + this.$route.params.id)
-        .then(response => {
-          //doan nay gan lai cac bien vao trong
-          console.log(response.data);
-          this.$data.id = response.data.id;
-          this.$data.firstname = response.data.firstname;
-          this.$data.lastname = response.data.lastname;
-          this.$data.sex = response.data.sex;
-          this.$data.dept = response.data.dept;
-          this.$data.email = response.data.email;
-          this.$data.jobtitle = response.data.jobtitle;
-          this.$data.homecity = response.data.homecity;
-          this.$data.updatedate = response.data.updatedate;
-        })
-        .catch(error => {});
-    }    
+    var p1 = HTTP.get(URL.getDept);
+    p1.then(res => {
+      this.$data.dept = res.data;
+      this.$data.ready = true;
+      if (this.$route.params.id) {
+        HTTP.get(URL.getEmployeeById + this.$route.params.id)
+          .then(response => {
+            //doan nay gan lai cac bien vao trong
+            console.log(response.data);
+            this.$data.selectedDept = parseInt(response.data.deptname);
+            this.$data.id = response.data.id;
+            this.$data.firstname = response.data.firstname;
+            this.$data.lastname = response.data.lastname;
+            this.$data.birthdate = response.data.birthdate;
+            this.$data.sex = response.data.sex;
+            this.$data.email = response.data.email;
+            this.$data.jobtitle = response.data.jobtitle;
+            this.$data.homecity = response.data.homecity;
+            this.$data.selected_bankcode = response.data.bankcode;
+            this.$data.bankacount = response.data.bankacount;
+            this.$data.startdate = response.data.startdate;
+            console.log(this.$data.deptname);
+          })
+          .catch(error => {
+            console.log(error);
+            this.$data.ready = true;
+          });
+      } else {
+        this.$data.ready = true;
+      }
+    }).catch(error => {
+      this.$data.message = "Một số thông tin lấy lỗi";
+      this.$data.snackbar = true;
+      this.$data.ready = true;
+    });
   },
+
   computed: {},
   methods: {
     save: function() {
@@ -103,37 +167,40 @@ export default {
         id: this.$data.id,
         firstname: this.$data.firstname,
         lastname: this.$data.lastname,
+        birthdate: this.$data.birthdate,
         sex: this.$data.vat,
-        dept: this.$data.dept,
+        deptname: this.$data.selectedDept,
         email: this.$data.email,
         jobtitle: this.$data.jobtitle,
         homecity: this.$data.homecity,
-        updatedate: this.$data.updatedate
+        bankcode: this.$data.selected_bankcode,
+        bankacount: this.$data.bankacount,
+        startdate: this.$data.startdate
       };
 
-      if(this.$route.params.id){
-        post_param["id"] = this.$route.params.id
+      if (this.$route.params.id) {
+        post_param["id"] = this.$route.params.id;
         HTTP.put(URL.updateEmployee, post_param)
-          .then(response => {            
+          .then(response => {
             this.$data.message = "Employee editted successfully!";
             this.$data.snackbar = true;
           })
-          .catch(e => {            
+          .catch(e => {
             this.$data.message = "Some errors happened!";
             this.$data.snackbar = true;
           });
       } else {
-      HTTP.post(URL.addNewEmployee, post_param)
-        .then(response => {
-          this.posts = response.data;
-          this.$data.message = "Employee added successfully!";
-          this.$data.snackbar = true;
-        })
-        .catch(e => {
-          console.log(e);
-          this.$data.message = "Some errors happened!";
-          this.$data.snackbar = true;
-        });
+        HTTP.post(URL.addNewEmployee, post_param)
+          .then(response => {
+            this.posts = response.data;
+            this.$data.message = "Employee added successfully!";
+            this.$data.snackbar = true;
+          })
+          .catch(e => {
+            console.log(e);
+            this.$data.message = "Some errors happened!";
+            this.$data.snackbar = true;
+          });
       }
     }
   }

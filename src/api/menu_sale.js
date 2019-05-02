@@ -1,27 +1,9 @@
-const DatMenu = [
+export default [
     {
         title: 'Home',
         group: 'Main',
         icon: 'home',
         name: 'dashboard',
-    },
-    {
-        title: 'Item Management',
-        group: 'Main',
-        icon: 'offline_bolt',
-        name: 'item',
-    },
-    {
-        title: 'Customer Management',
-        group: 'Main',
-        icon: 'business_center',
-        name: 'customer',
-    },
-    {
-        title: 'Employee Management',
-        group: 'Main',
-        icon: 'person',
-        name: 'employee',
     },
     {
         title: 'Quotation Management',
@@ -47,7 +29,5 @@ const DatMenu = [
         icon: 'assignment_turned_in',
         name: 'invoice',
     },
-    
-];
 
-export default DatMenu;
+];

@@ -48,12 +48,7 @@
 </template>
 <script>
 import { HTTP, URL } from "@/api/http-common";
-// import Customer from "@/api/quotations/customer";
-// import Countries from "@/api/country";
 import Currency from "@/api/quotations/currency";
-// import Sales from "@/api/quotations/sales";
-// import Employees from "@/api/quotations/employee";
-// import Items from "@/api/quotations/item";
 
 export default {
   components: {},

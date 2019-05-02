@@ -117,6 +117,22 @@
                   slot-scope="data"
                 >{{ data.item.lastname }}, {{ data.item.firstname }}</template>
               </v-autocomplete>
+              <v-select label="Chọn nơi nhận hàng" :items="shipto" v-model="selected_shipto"></v-select>
+              <v-text-field label="Nhập địa chỉ nhận hàng" v-model="address"></v-text-field>
+              <v-autocomplete
+                v-model="selectedTrans"
+                label="Vận chuyển"
+                :items="trans"
+                item-text="name"
+                item-value="code"
+                :rules="[(v) => !!v || 'Phải nhập phương tiện vận chuyển']"
+              >
+                <template
+                  slot="selection"
+                  slot-scope="data"
+                >{{ data.item.code }} - {{ data.item.name }}</template>
+                <template slot="item" slot-scope="data">{{ data.item.code }} - {{ data.item.name }}</template>
+              </v-autocomplete>
             </v-card>
           </v-flex>
           <v-flex md7>
@@ -209,6 +225,7 @@
               <v-btn primary large>CANCEL</v-btn>
             </router-link>
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
+            <v-btn primary large color="info" v-on:click="copy">COPY</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
@@ -224,6 +241,7 @@ import { HTTP, URL } from "@/api/http-common";
 // import Customer from "@/api/quotations/customer";
 // import Countries from "@/api/country";
 import Currency from "@/api/quotations/currency";
+import Shipto from "@/api/quotations/shipto";
 import { setTimeout } from "timers";
 import { Promise } from "q";
 // import Sales from "@/api/quotations/sales";
@@ -233,7 +251,7 @@ import { Promise } from "q";
 export default {
   components: {},
   data() {
-    return {      
+    return {
       headers: [
         { text: "Mã hàng hóa", align: "left" },
         { text: "Mô tả hàng hóa", align: "left" },
@@ -254,6 +272,7 @@ export default {
       selected_contact: null,
       selectedSale: null,
       selectedEmployee: null,
+      selectedTrans:null,
       currency: Currency,
       menu_due_date: false,
       menu_doc_date: false,
@@ -261,6 +280,9 @@ export default {
       sales: [],
       employees: [],
       items: [],
+      trans:[],
+      shipto: Shipto,
+      selected_shipto: Shipto[0],
       selected_currency: Currency[0],
       current_item: {
         item: null,
@@ -272,7 +294,6 @@ export default {
       docdate: new Date().toISOString().substr(0, 10),
       duedate: new Date().toISOString().substr(0, 10),
       taxdate: new Date().toISOString().substr(0, 10),
-      docStatus: "Open",
       tong_truoc_chiet_khau: 0,
       tong_thanh_toan: 0,
       chiet_khau: 0,
@@ -289,7 +310,8 @@ export default {
     var p3 = HTTP.get(URL.getItem);
     var p4 = HTTP.get(URL.getEmployee);
     var p5 = HTTP.get(URL.getSale);
-    var pAll = Promise.all([p1, p2, p3, p4, p5]);
+    var p6 = HTTP.get(URL.getTrans);
+    var pAll = Promise.all([p1, p2, p3, p4, p5, p6]);
     pAll
       .then(res => {
         this.$data.customers = res[0].data;
@@ -297,6 +319,7 @@ export default {
         this.$data.items = res[2].data;
         this.$data.employees = res[3].data;
         this.$data.sales = res[4].data;
+        this.$data.trans = res[5].data;
         this.$data.ready = true;
         if (this.$route.params.id) {
           HTTP.get(URL.getOrderById + this.$route.params.id)
@@ -309,14 +332,18 @@ export default {
               );
               this.$data.selectedSale = parseInt(response.data.saleEmployee);
               this.$data.selectedEmployee = parseInt(response.data.employee);
+              this.$data.selectedTrans = parseInt(response.data.trasnport);
               this.$data.selected_items = response.data.listItem;
               this.$data.duedate = response.data.dueDate;
               this.$data.docdate = response.data.docDate;
+              this.$data.taxdate = response.data.taxDate;
               this.$data.selected_currency = response.data.currency;
+              this.$data.selected_shipto = response.data.shipto;
               this.calculate_sum();
               console.log(this.$data.selectedCustomer);
               console.log(this.$data.saleEmployee);
               console.log(this.$data.employee);
+              console.log(this.$data.trasnport);
             })
             .catch(error => {
               console.log(error);
@@ -350,7 +377,7 @@ export default {
           this.$data.selected_contact_person = available_contacts[0].code;
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
     itemSelect: function(a) {
@@ -454,11 +481,12 @@ export default {
         contactCode: this.$data.selected_contact_person,
         saleEmployee: this.$data.selectedSale,
         employee: this.$data.selectedEmployee,
+        trasnport: this.$data.selectedTrans,
         docDate: this.$data.docdate,
         dueDate: this.$data.duedate,
         taxDate: this.$data.taxdate,
         currency: this.$data.selected_currency,
-        docstatus: "O",
+        shipto: this.$data.selected_shipto,
         listItem: []
       };
       var si = this.$data.selected_items;

@@ -272,7 +272,6 @@ export default {
       docdate: new Date().toISOString().substr(0, 10),
       duedate: new Date().toISOString().substr(0, 10),
       taxdate: new Date().toISOString().substr(0, 10),
-      docStatus: "Open",
       tong_truoc_chiet_khau: 0,
       tong_thanh_toan: 0,
       chiet_khau: 0,
@@ -312,6 +311,7 @@ export default {
               this.$data.selected_items = response.data.listItem;
               this.$data.duedate = response.data.dueDate;
               this.$data.docdate = response.data.docDate;
+              this.$data.taxdate = response.data.taxDate;
               this.$data.selected_currency = response.data.currency;
               this.calculate_sum();
               console.log(this.$data.selectedCustomer);
@@ -458,7 +458,6 @@ export default {
         dueDate: this.$data.duedate,
         taxDate: this.$data.taxdate,
         currency: this.$data.selected_currency,
-        docstatus: "O",
         listItem: []
       };
       var si = this.$data.selected_items;

@@ -25,7 +25,7 @@
                 <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
-                <v-btn class="success">Approve</v-btn>
+                <v-btn class="success" @click="approve(item.id)">Approve</v-btn>
               </v-list-tile-action>
             </v-list-tile>
             <v-divider v-if="index + 1 < quots.length" :key="`divider-${index}`"></v-divider>
@@ -33,6 +33,7 @@
         </v-list>
       </v-card>
     </v-flex>
+
     <v-flex v-if="roleID=='admin'" sm6 md6 xs12 class="pa-4">
       <v-card>
         <v-toolbar color="primary" dark>
@@ -58,7 +59,7 @@
                 <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
-                <v-btn class="success" @click="approve()">Approve</v-btn>
+                <v-btn class="success" @click="approve(item.id)">Approve</v-btn>
               </v-list-tile-action>
             </v-list-tile>
             <v-divider v-if="index + 1 < orders.length" :key="`divider-${index}`"></v-divider>
@@ -78,6 +79,10 @@
         </v-card>
       </v-flex>
     </template>
+    <v-snackbar v-model="snackbar" top :timeout="3000">
+      {{message}}
+      <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
   </v-layout>
 </template>
 <style scoped>
@@ -96,28 +101,69 @@ export default {
       roleID: localStorage.getItem("roleID"),
       orders: [],
       quots: [],
-      stats: []
+      stats: [],
+      snackbar: false,
+      message: null
     };
   },
   created() {
     this.stats = Stat;
-    this.orders = AppQuot;
-    this.quots = AppQuot;
+    // this.orders = AppQuot;
+    this.getQuot();
   },
   methods: {
+    // lấy về những quotation chưa confirm
+    // ông thử viết đi
+    getQuot: function() {
+      HTTP.get(URL.getQuot, {
+        params: {
+          status: "O"
+        }
+      })
+        .then(response => {
+          this.$data.quots = []
+          for (let index = 0; index < response.data.length; index++) {
+            const element = response.data[index];
+            var x = {
+              id: element.id,
+              headline: element.name,
+              title: element.dueDate,
+              subtitle: element.slpname
+            };
+            this.$data.quots.push(x);
+          }
+        })
+        .catch(error => {
+          this.$data.ready = true;
+        });
+    },
     refreshQuot: function() {
-      this.quots = AppQuot;
+      this.getQuot()
     },
     refreshOrder: function() {
-      this.orders = AppQuot;
+      this.orders = [];
     },
-    gotoQuout: function(id){
-      console.log("/quotation/edit/"+id)
-      this.$router.push("/quotation/edit/"+id)
-
+    gotoQuout: function(id) {
+      console.log("/quotation/edit/" + id);
+      this.$router.push("/quotation/edit/" + id);
     },
-    gotoOrder: function(){
-      
+    gotoOrder: function() {},
+    approve: function(id) {      
+      HTTP.get(URL.confirm, {
+        params: {
+          id: parseInt(id),
+          confirm: "C"
+        }
+      })
+        .then(response => {
+          this.getQuot()
+          this.$data.message = "Quotation approved successfully!";
+          this.$data.snackbar = true;
+        })
+        .catch(error => {
+          this.$data.message = "Some errors happened!";
+          this.$data.snackbar = true;
+        });
     }
   }
 };
