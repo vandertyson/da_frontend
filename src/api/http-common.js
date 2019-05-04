@@ -33,7 +33,15 @@ export const URL = {
   "deleteOrder": SERVER + "/salesorder/deleteOrder/",
   "deleteItem": SERVER + "/item/deleteItem/",
   "deleteCustomer": SERVER + "/customer/deleteCustomer/",
-  "deleteEmployee": SERVER + "/employee/deleteEmployee/"
+  "deleteEmployee": SERVER + "/employee/deleteEmployee/",
+  "getGroup": SERVER + "/item/group",
+
+  "getWhs": SERVER + "/warehouse/warehouses",
+  "getWhsByCode": SERVER + "/warehouse/warehouse/",
+  "updateWhs": SERVER + "/warehouse/updateWarehouse",
+  "addWhs": SERVER + "/warehouse/addWarehouse",
+  "deleteWhs": SERVER + "/warehouse/deleteWarehouse/",
+
 
 }
 

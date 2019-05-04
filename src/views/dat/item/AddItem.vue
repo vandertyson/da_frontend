@@ -9,7 +9,22 @@
 
               <v-text-field label="Nhập mã vật tư hàng hóa" v-model="code"></v-text-field>
               <v-text-field label="Nhập tên vật tư" v-model="name"></v-text-field>
-              <v-text-field label="Nhập nhóm hàng" v-model="group"></v-text-field>
+
+              <v-autocomplete
+                v-model="selectedGroup"
+                label="Nhóm hàng hóa"
+                :items="group"
+                item-text="name"
+                item-value="code"
+                :rules="[(v) => !!v || 'Phải nhập nhóm hàng']"
+              >
+                <template
+                  slot="selection"
+                  slot-scope="data"
+                >{{ data.item.code }} - {{ data.item.name }}</template>
+                <template slot="item" slot-scope="data">{{ data.item.code }} - {{ data.item.name }}</template>
+              </v-autocomplete>
+
               <v-text-field label="Nhập VAT" v-model="vat"></v-text-field>
               <v-text-field label="Nhập số lượng trong kho" v-model="onhand"></v-text-field>
               <v-text-field label="Nhập unit" v-model="uomcode"></v-text-field>
@@ -32,6 +47,7 @@
           </v-flex>
 
           <v-layout align-end justify-end class="mr-4">
+            <v-btn primary large color="warning" v-on:click="clear">CLEAR</v-btn>
             <router-link to="/item" tag="button">
               <v-btn primary large>CANCEL</v-btn>
             </router-link>
@@ -62,33 +78,49 @@ export default {
       ready: false,
       code: "",
       name: "",
-      group: 0,
+      selectedGroup: null,
+      group: [],
       vat: "",
       onhand: 0,
       uomcode: "",
       createdate: new Date().toISOString().substr(0, 10),
-      menu_create_date:false,
+      menu_create_date: false,
       valid: false,
       snackbar: false,
       message: null
     };
   },
   created() {
-    if (this.$route.params.code) {
-      HTTP.get(URL.getItembyId + "/" + this.$route.params.code)
-        .then(response => {
-          //doan nay gan lai cac bien vao trong
-          console.log(response.data);
-          this.$data.code = response.data.code;
-          this.$data.name = response.data.name;
-          this.$data.group = response.data.group;
-          this.$data.vat = response.data.vat;
-          this.$data.onhand = response.data.onhand;
-          this.$data.uomcode = response.data.uomcode;
-          this.$data.createdate = response.data.createdate;
-        })
-        .catch(error => {});
-    }
+    var p1 = HTTP.get(URL.getGroup);
+    p1.then(res => {
+      this.$data.group = res.data;
+      this.$data.ready = true;
+      if (this.$route.params.code) {
+        HTTP.get(URL.getItembyId + this.$route.params.code)
+          .then(response => {
+            //doan nay gan lai cac bien vao trong
+            console.log(response.data);
+            this.$data.selectedGroup = parseInt(response.data.groupname);
+            this.$data.code = response.data.code;
+            this.$data.name = response.data.name;
+            this.$data.vat = response.data.vat;
+            this.$data.onhand = response.data.onhand;
+            this.$data.uomcode = response.data.uomcode;
+            this.$data.createdate = response.data.createdate;
+            console.log(this.$data.groupname);
+          })
+          .catch(error => {
+            console.log(error);
+            this.$data.ready = true;
+          });
+      } else {
+        this.$data.ready = true;
+      }
+    }).catch(error => {
+      this.$data.message = "Một số thông tin lấy lỗi";
+      this.$data.snackbar = true;
+      this.$data.ready = true;
+    });
   },
   computed: {},
   methods: {
@@ -96,7 +128,7 @@ export default {
       var post_param = {
         code: this.$data.code,
         name: this.$data.name,
-        group: this.$data.group,
+        groupname: this.$data.selectedGroup,
         vat: this.$data.vat,
         onhand: this.$data.onhand,
         uomcode: this.$data.uomcode,
@@ -106,23 +138,23 @@ export default {
       //neu ko thi them moi
 
       if (this.$route.params.code) {
-        post_param["code"] = this.$route.params.code
+        post_param["code"] = this.$route.params.code;
         HTTP.put(URL.updateItem, post_param)
-          .then(response => {            
+          .then(response => {
             this.$data.message = "Item editted successfully!";
             this.$data.snackbar = true;
           })
-          .catch(e => {            
+          .catch(e => {
             this.$data.message = "Some errors happened!";
             this.$data.snackbar = true;
           });
       } else {
         HTTP.post(URL.addNewItem, post_param)
-          .then(response => {            
+          .then(response => {
             this.$data.message = "Item added successfully!";
             this.$data.snackbar = true;
           })
-          .catch(e => {            
+          .catch(e => {
             this.$data.message = "Some errors happened!";
             this.$data.snackbar = true;
           });

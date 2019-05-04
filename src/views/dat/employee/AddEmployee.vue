@@ -3,11 +3,10 @@
     <v-form v-model="valid" ref="form" lazy-validation>
       <v-container grid-list-xl fluid>
         <v-layout row wrap>
-          <v-flex xs12 sm6 md12>
+          <v-flex xs12 sm6 md6>
             <v-card class="pa-4">
               <h4 class="headline mb-0">Thông tin chung</h4>
-
-              <v-text-field label="Nhập id nhân viên" v-model="id"></v-text-field>
+              <v-text-field label="ID nhân viên" v-model="id"></v-text-field>
               <v-text-field label="Nhập họ" v-model="firstname"></v-text-field>
               <v-text-field
                 label="Nhập tên"
@@ -44,7 +43,11 @@
                 >{{ data.item.code }} - {{ data.item.name }}</template>
                 <template slot="item" slot-scope="data">{{ data.item.code }} - {{ data.item.name }}</template>
               </v-autocomplete>
+            </v-card>
+          </v-flex>
 
+          <v-flex xs12 sm6 md6>
+            <v-card class="pa-4">
               <v-text-field label="Nhập email" v-model="email"></v-text-field>
               <v-text-field
                 label="Nhập nghề nghiệp"
@@ -73,6 +76,7 @@
           </v-flex>
 
           <v-layout align-end justify-end class="mr-4">
+            <v-btn primary large color="warning" v-on:click="clear">CLEAR</v-btn>
             <router-link to="/employee" tag="button">
               <v-btn primary large>CANCEL</v-btn>
             </router-link>
@@ -202,6 +206,9 @@ export default {
             this.$data.snackbar = true;
           });
       }
+    },
+    clear: function(){
+     
     }
   }
 };

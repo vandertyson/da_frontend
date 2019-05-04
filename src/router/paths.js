@@ -203,5 +203,32 @@ export default [
       /* webpackChunkName: "routes" */
       `@/views/dat/order/AddOrder.vue`
     )
+  },
+  {
+    path: '/warehouse',
+    meta: { breadcrumb: true },
+    name: 'warehouse',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/warehouse/ListWarehouse.vue`
+    )
+  },
+  {
+    path: '/warehouse/add',
+    meta: { breadcrumb: true },
+    name: 'warehouse/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/warehouse/AddWarehouse.vue`
+    )
+  },
+  {
+    path: '/warehouse/edit/:code',
+    meta: { breadcrumb: true },
+    name: 'warehouse/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/warehouse/AddWarehouse.vue`
+    )
   }
 ];

@@ -12,6 +12,12 @@ export default [
         name: 'item',
     },
     {
+        title: 'Warehouse Management',
+        group: 'Main',
+        icon: 'offline_bolt',
+        name: 'warehouse',
+    },
+    {
         title: 'Customer Management',
         group: 'Main',
         icon: 'business_center',
