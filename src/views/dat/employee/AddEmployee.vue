@@ -5,7 +5,7 @@
         <v-layout row wrap>
           <v-flex xs12 sm6 md6>
             <v-card class="pa-4">
-              <h4 class="headline mb-0">Thông tin chung</h4>
+              <h4 class="headline mb-0">Thông tin nhân viên</h4>
               <v-text-field label="ID nhân viên" v-model="id"></v-text-field>
               <v-text-field label="Nhập họ" v-model="firstname"></v-text-field>
               <v-text-field
@@ -28,7 +28,7 @@
                 </template>
                 <v-date-picker v-model="birthdate" @input="menu_birth_date = false"></v-date-picker>
               </v-menu>
-              <v-text-field label="Nhập giới tính" v-model="sex"></v-text-field>
+              <v-text-field label="Giới tính" v-model="sex"></v-text-field>
               <v-autocomplete
                 v-model="selectedDept"
                 label="Bộ phận làm việc"
@@ -48,15 +48,15 @@
 
           <v-flex xs12 sm6 md6>
             <v-card class="pa-4">
-              <v-text-field label="Nhập email" v-model="email"></v-text-field>
+              <v-text-field label="Email" v-model="email"></v-text-field>
               <v-text-field
                 label="Nhập nghề nghiệp"
                 v-model="jobtitle"
                 :rules="[(v) => !!v || 'Phải nhập nghề nghiệp']"
               ></v-text-field>
-              <v-text-field label="Nhập quê quán" v-model="homecity"></v-text-field>
+              <v-text-field label="Quê quán" v-model="homecity"></v-text-field>
               <v-select label="Chọn ngân hàng" :items="bankcode" v-model="selected_bankcode"></v-select>
-              <v-text-field label="Nhập số tài khoản" v-model="bankacount"></v-text-field>
+              <v-text-field label="Số tài khoản" v-model="bankacount"></v-text-field>
               <v-menu
                 v-model="menu_start_date"
                 :close-on-content-click="false"
@@ -207,8 +207,19 @@ export default {
           });
       }
     },
-    clear: function(){
-     
+    clear: function() {
+      this.id = "";
+      this.firstname = "";
+      this.lastname = "";
+      this.sex = "";
+      this.birthdate = new Date().toISOString().substr(0, 10);
+      //this.dept = [];
+      this.email = "";
+      this.jobtitle = "";
+      this.homecity = "";
+      //this.bankcode = Bankcode;
+      this.bankacount = "";
+      this.startdate = new Date().toISOString().substr(0, 10);
     }
   }
 };

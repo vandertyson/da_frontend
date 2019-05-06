@@ -5,7 +5,7 @@
         <v-layout row wrap>
           <v-flex md12>
             <v-card class="pa-4">
-              <h4 class="headline mb-0">Thông tin chung</h4>
+              <h4 class="headline mb-0">Thông tin hàng hóa vật tư</h4>
 
               <v-text-field label="Nhập mã vật tư hàng hóa" v-model="code"></v-text-field>
               <v-text-field label="Nhập tên vật tư" v-model="name"></v-text-field>
@@ -159,6 +159,14 @@ export default {
             this.$data.snackbar = true;
           });
       }
+    },
+    clear: function() {
+      this.code = "";
+      this.name = "";
+      //this.group = [];
+      this.vat = "";
+      this.onhand = 0;
+      this.uomcode = "";
     }
   }
 };

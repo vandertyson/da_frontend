@@ -230,5 +230,59 @@ export default [
       /* webpackChunkName: "routes" */
       `@/views/dat/warehouse/AddWarehouse.vue`
     )
+  },
+  {
+    path: '/delivery',
+    meta: { breadcrumb: true },
+    name: 'delivery',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/delivery/ListDelivery.vue`
+    )
+  },
+  {
+    path: '/delivery/add',
+    meta: { breadcrumb: true },
+    name: 'delivery/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/delivery/AddDelivery.vue`
+    )
+  },
+  {
+    path: '/delivery/edit/:id',
+    meta: { breadcrumb: true },
+    name: 'delivery/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/delivery/AddDelivery.vue`
+    )
+  },
+  {
+    path: '/invoice',
+    meta: { breadcrumb: true },
+    name: 'invoice',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/invoice/ListInvoice.vue`
+    )
+  },
+  {
+    path: '/invoice/add',
+    meta: { breadcrumb: true },
+    name: 'invoice/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/invoice/AddInvoice.vue`
+    )
+  },
+  {
+    path: '/invoice/edit/:id',
+    meta: { breadcrumb: true },
+    name: 'invoice/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/invoice/AddInvoice.vue`
+    )
   }
 ];

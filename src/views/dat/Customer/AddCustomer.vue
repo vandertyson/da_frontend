@@ -5,14 +5,14 @@
         <v-layout row wrap>
           <v-flex md12>
             <v-card class="pa-4">
-              <h4 class="headline mb-0">Thông tin chung</h4>
+              <h4 class="headline mb-0">Thông tin khách hàng</h4>
 
-              <v-text-field label="Nhập mã khách hàng" v-model="code"></v-text-field>
-              <v-text-field label="Nhập tên khách hàng" v-model="name"></v-text-field>
-              <v-text-field label="Nhập người liên hệ" v-model="contactperson"></v-text-field>
-              <v-text-field label="Nhập email" v-model="email"></v-text-field>
-              <v-text-field label="Nhập số fax" v-model="fax"></v-text-field>
-              <v-text-field label="Nhập số điện thoại" v-model="phone1"></v-text-field>
+              <v-text-field label="Mã khách hàng" v-model="code"></v-text-field>
+              <v-text-field label="Tên khách hàng" v-model="name"></v-text-field>
+              <v-text-field label="Người liên hệ" v-model="contactperson"></v-text-field>
+              <v-text-field label="Email" v-model="email"></v-text-field>
+              <v-text-field label="Số fax" v-model="fax"></v-text-field>
+              <v-text-field label="Số điện thoại" v-model="phone1"></v-text-field>
               <v-menu
                 v-model="menu_create_date"
                 :close-on-content-click="false"
@@ -63,14 +63,14 @@ export default {
       fax: 0,
       phone1: 0,
       createdate: new Date().toISOString().substr(0, 10),
-      menu_create_date:false,
+      menu_create_date: false,
       valid: false,
       snackbar: false,
       message: null
     };
   },
   created() {
-        if (this.$route.params.code) {
+    if (this.$route.params.code) {
       HTTP.get(URL.getCustomerbyId + "/" + this.$route.params.code)
         .then(response => {
           //doan nay gan lai cac bien vao trong
@@ -100,29 +100,37 @@ export default {
       };
 
       if (this.$route.params.code) {
-        post_param["code"] = this.$route.params.code
+        post_param["code"] = this.$route.params.code;
         HTTP.put(URL.updateCustomer, post_param)
-          .then(response => {            
+          .then(response => {
             this.$data.message = "Customer editted successfully!";
             this.$data.snackbar = true;
           })
-          .catch(e => {            
+          .catch(e => {
             this.$data.message = "Some errors happened!";
             this.$data.snackbar = true;
           });
       } else {
-          HTTP.post(URL.addNewCustomer, post_param)
-        .then(response => {
-          this.posts = response.data;
-          this.$data.message = "Customer added successfully!";
-          this.$data.snackbar = true;
-        })
-        .catch(e => {
-          console.log(e);
-          this.$data.message = "Some errors happened!";
-          this.$data.snackbar = true;
-        });
-      } 
+        HTTP.post(URL.addNewCustomer, post_param)
+          .then(response => {
+            this.posts = response.data;
+            this.$data.message = "Customer added successfully!";
+            this.$data.snackbar = true;
+          })
+          .catch(e => {
+            console.log(e);
+            this.$data.message = "Some errors happened!";
+            this.$data.snackbar = true;
+          });
+      }
+    },
+    clear: function() {
+      this.code = "";
+      this.name = "";
+      this.contactperson = "";
+      this.email = "";
+      this.fax = 0;
+      this.phone1 = 0;
     }
   }
 };
