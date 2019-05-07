@@ -6,14 +6,18 @@
       </div>
       <v-layout v-if="ready" row wrap>
         <router-link to="/item/add" tag="button">
-          <v-btn color="success" class="text-lg-right">Add new item</v-btn>
+          <v-btn round color="success" outline class="text-lg-right">Add new item</v-btn>
         </router-link>
-        <v-flex md6>
+        <v-flex md5>
           <v-text-field
             label="Search Item"
             v-model="itemName"
             append-icon="search"
             v-on:keyup.enter="searchItem()"
+            clearable
+            counter="100"
+            hint="Item name"
+            type="text"
           ></v-text-field>
         </v-flex>
         <v-flex lg12 text-xs-right>

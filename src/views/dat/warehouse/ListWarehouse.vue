@@ -6,14 +6,15 @@
       </div>
       <v-layout v-if="ready" row wrap>
         <router-link to="/warehouse/add" tag="button">
-          <v-btn color="success" class="text-lg-right">Add new Warehouse</v-btn>
+          <v-btn round large color="success" outline class="text-lg-right">Add new Warehouse</v-btn>
         </router-link>
-        <v-flex md6>
+        <v-flex md4>
           <v-text-field
             label="Search Warehouse"
             v-model="whsName"
             append-icon="search"
             v-on:keyup.enter="searchWhs()"
+            clearable
           ></v-text-field>
         </v-flex>
         <v-flex lg12 text-xs-right>

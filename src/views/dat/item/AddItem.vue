@@ -7,27 +7,68 @@
             <v-card class="pa-4">
               <h4 class="headline mb-0">Thông tin hàng hóa vật tư</h4>
 
-              <v-text-field label="Nhập mã vật tư hàng hóa" v-model="code"></v-text-field>
-              <v-text-field label="Nhập tên vật tư" v-model="name"></v-text-field>
+              <v-text-field
+                label="Nhập mã vật tư hàng hóa"
+                counter
+                maxlength="50"
+                hint="Required both Characters and Numbers"
+                v-model="code"
+                clearable
+                :rules="[(v) => !!v || 'Phải nhập mã hàng hóa']"
+              ></v-text-field>
+              <v-text-field
+                label="Nhập tên vật tư"
+                counter="100"
+                maxlength="100"
+                hint="Item general description"
+                v-model="name"
+                clearable
+                :rules="[(v) => !!v || 'Phải nhập tên hàng hóa']"
+              ></v-text-field>
 
               <v-autocomplete
                 v-model="selectedGroup"
                 label="Nhóm hàng hóa"
                 :items="group"
-                item-text="name"
-                item-value="code"
+                item-text="groupname"
+                item-value="groupcode"
+                placeholder="Select"
                 :rules="[(v) => !!v || 'Phải nhập nhóm hàng']"
               >
                 <template
                   slot="selection"
                   slot-scope="data"
-                >{{ data.item.code }} - {{ data.item.name }}</template>
-                <template slot="item" slot-scope="data">{{ data.item.code }} - {{ data.item.name }}</template>
+                >{{ data.item.groupcode }} - {{ data.item.groupname }}</template>
+                <template
+                  slot="item"
+                  slot-scope="data"
+                >{{ data.item.groupcode }} - {{ data.item.groupname }}</template>
               </v-autocomplete>
 
-              <v-text-field label="Nhập VAT" v-model="vat"></v-text-field>
-              <v-text-field label="Nhập số lượng trong kho" v-model="onhand"></v-text-field>
-              <v-text-field label="Nhập unit" v-model="uomcode"></v-text-field>
+              <v-text-field
+                label="Nhập VAT"
+                v-model="vat"
+                type="number"
+                hint="current vat"
+                placeholder="10%"
+                maxlength="2"
+                clearable
+              ></v-text-field>
+              <v-text-field
+                label="Nhập số lượng trong kho"
+                v-model="onhand"
+                hint="In Stock"
+                type="number"
+                clearable
+              ></v-text-field>
+              <v-text-field
+                label="Nhập unit"
+                v-model="uomcode"
+                type="text"
+                hint="gam,chiếc,cái..."
+                clearable
+                :rules="[(v) => !!v || 'Phải nhập mã hàng hóa']"
+              ></v-text-field>
               <v-menu
                 v-model="menu_create_date"
                 :close-on-content-click="false"
@@ -48,9 +89,9 @@
 
           <v-layout align-end justify-end class="mr-4">
             <v-btn primary large color="warning" v-on:click="clear">CLEAR</v-btn>
-            <router-link to="/item" tag="button">
-              <v-btn primary large>CANCEL</v-btn>
-            </router-link>
+            <!-- <router-link to="/item" tag="button"> -->
+            <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
+            <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
@@ -59,6 +100,19 @@
           </v-snackbar>
         </v-layout>
       </v-container>
+      <v-dialog v-model="dialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Are you sure you want to cancel ?</v-card-title>
+          <v-card-text>All your actions might be unsaved</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat @click="dialog = false">No</v-btn>
+            <router-link to="/item" tag="button">
+              <v-btn color="green darken-1" flat @click="dialog = false">Yes</v-btn>
+            </router-link>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-form>
   </div>
 </template>
@@ -75,6 +129,7 @@ export default {
   components: {},
   data() {
     return {
+      dialog: false,
       ready: false,
       code: "",
       name: "",
@@ -171,3 +226,4 @@ export default {
   }
 };
 </script>
+

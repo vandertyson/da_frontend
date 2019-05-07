@@ -6,7 +6,7 @@
     <v-container v-if="ready" grid-list-xl fluid>
       <v-layout row wrap>
         <router-link to="/quotation/add" tag="button">
-          <v-btn color="success" class="text-lg-right">Add new quotation</v-btn>
+          <v-btn round color="success" class="text-lg-right">Add new quotation</v-btn>
         </router-link>
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">

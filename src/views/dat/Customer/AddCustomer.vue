@@ -3,16 +3,53 @@
     <v-form v-model="valid" ref="form" lazy-validation>
       <v-container grid-list-xl fluid>
         <v-layout row wrap>
-          <v-flex md12>
+          <v-flex md10>
             <v-card class="pa-4">
               <h4 class="headline mb-0">Thông tin khách hàng</h4>
 
-              <v-text-field label="Mã khách hàng" v-model="code"></v-text-field>
-              <v-text-field label="Tên khách hàng" v-model="name"></v-text-field>
-              <v-text-field label="Người liên hệ" v-model="contactperson"></v-text-field>
-              <v-text-field label="Email" v-model="email"></v-text-field>
-              <v-text-field label="Số fax" v-model="fax"></v-text-field>
-              <v-text-field label="Số điện thoại" v-model="phone1"></v-text-field>
+              <v-text-field
+                label="Mã khách hàng"
+                v-model="code"
+                counter
+                maxlength="15"
+                hint="BusinessPartner Code, including Numbers and Characters"
+                clearable
+                :rules="[(v) => !!v || 'Phải nhập mã khách hàng']"
+              ></v-text-field>
+              <v-text-field
+                label="Tên khách hàng"
+                v-model="name"
+                counter
+                maxlength="100"
+                clearable
+                :rules="[(v) => !!v || 'Phải nhập tên khách hàng']"
+              ></v-text-field>
+              <v-text-field
+                label="Người liên hệ"
+                v-model="contactperson"
+                counter
+                maxlength="90"
+                hint="Contact name"
+                clearable
+              ></v-text-field>
+              <v-text-field label="E-mail" v-model="email" :rules="[rules.required, rules.email]"></v-text-field>
+              <v-text-field
+                label="Số fax"
+                v-model="fax"
+                counter
+                maxlength="20"
+                clearable
+                type="number"
+              ></v-text-field>
+              <v-text-field
+                label="Số điện thoại"
+                v-model="phone1"
+                counter
+                maxlength="20"
+                clearable
+                type="number"
+                :rules="[(v) => !!v || 'Phải nhập số điện thoại']"
+              ></v-text-field>
               <v-menu
                 v-model="menu_create_date"
                 :close-on-content-click="false"
@@ -33,9 +70,9 @@
 
           <v-layout align-end justify-end class="mr-4">
             <v-btn primary large color="warning" v-on:click="clear">CLEAR</v-btn>
-            <router-link to="/customer" tag="button">
-              <v-btn primary large>CANCEL</v-btn>
-            </router-link>
+            <!-- <router-link to="/customer" tag="button"> -->
+            <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
+            <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
@@ -44,6 +81,19 @@
           </v-snackbar>
         </v-layout>
       </v-container>
+      <v-dialog v-model="dialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Are you sure you want to cancel ?</v-card-title>
+          <v-card-text>All your actions might be unsaved</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat @click="dialog = false">No</v-btn>
+            <router-link to="/customer" tag="button">
+              <v-btn color="green darken-1" flat @click="dialog = false">Yes</v-btn>
+            </router-link>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-form>
   </div>
 </template>
@@ -55,11 +105,20 @@ export default {
   components: {},
   data() {
     return {
+      dialog:false,
       ready: false,
       code: "",
       name: "",
       contactperson: "",
       email: "",
+      rules: {
+        required: value => !!value || "Required.",
+        counter: value => value.length <= 20 || "Max 20 characters",
+        email: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(value) || "Invalid e-mail.";
+        }
+      },
       fax: 0,
       phone1: 0,
       createdate: new Date().toISOString().substr(0, 10),
