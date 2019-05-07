@@ -205,9 +205,10 @@
           </v-flex>
 
           <v-layout align-end justify-end class="mr-4">
-            <router-link to="/quotation" tag="button">
-              <v-btn primary large>CANCEL</v-btn>
-            </router-link>
+            <v-btn primary large color="error" v-on:click="print">Print</v-btn>
+            <!-- <router-link to="/quotation" tag="button"> -->
+            <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
+            <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
@@ -216,6 +217,19 @@
           </v-snackbar>
         </v-layout>
       </v-container>
+      <v-dialog v-model="dialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Are you sure you want to cancel ?</v-card-title>
+          <v-card-text>All your actions might be unsaved</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat @click="dialog = false">No</v-btn>
+            <router-link to="/quotation" tag="button">
+              <v-btn color="green darken-1" flat @click="dialog = false">Yes</v-btn>
+            </router-link>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-form>
   </div>
 </template>
@@ -245,6 +259,7 @@ export default {
         { text: "Đơn vị", align: "left" },
         { text: "", align: "left" }
       ],
+      dialog: false,
       ready: false,
       customers: [],
       contacts: [],
