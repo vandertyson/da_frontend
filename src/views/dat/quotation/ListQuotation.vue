@@ -5,9 +5,9 @@
     </div>
     <v-container v-if="ready" grid-list-xl fluid>
       <v-layout row wrap>
-        <router-link to="/quotation/add" tag="button">
-          <v-btn round color="success" class="text-lg-right">Add new quotation</v-btn>
-        </router-link>
+        <!-- <router-link to="/quotation/add" tag="button">
+          <v-btn color="success" class="text-lg-right">Add new quotation</v-btn>
+        </router-link> -->
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
             <v-data-table
@@ -50,6 +50,7 @@ import { HTTP, URL } from "@/api/http-common";
 import Quotation from "@/api/quotations/quotation";
 import { error } from "util";
 export default {
+  name: "list-quotation",
   components: {},
   data() {
     return {

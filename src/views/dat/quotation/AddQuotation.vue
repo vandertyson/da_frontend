@@ -210,11 +210,17 @@
             <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
             <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
+            <v-btn primary large color="info" @click="copyForm = true">COPY</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
             <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
           </v-snackbar>
+          <v-dialog v-model="copyForm" max-width="70%">
+            <template>
+              <copy-component :copyObject="copyObject" @select="onSelectCopy" md6></copy-component>
+            </template>
+          </v-dialog>
         </v-layout>
       </v-container>
       <v-dialog v-model="dialog" persistent max-width="290">
@@ -235,6 +241,7 @@
 </template>
 <script>
 import { HTTP, URL } from "@/api/http-common";
+import CopyComponent from "../utils/CopyComponent";
 // import Customer from "@/api/quotations/customer";
 // import Countries from "@/api/country";
 import Currency from "@/api/quotations/currency";
@@ -245,7 +252,9 @@ import { Promise } from "q";
 // import Items from "@/api/quotations/item";
 
 export default {
-  components: {},
+  components: {
+    CopyComponent
+  },
   data() {
     return {
       headers: [
@@ -294,7 +303,11 @@ export default {
       lam_tron: 0,
       valid: false,
       snackbar: false,
-      message: null
+      message: null,
+      copyForm: false,
+      copyObject: {
+        haha: "haha"
+      }
     };
   },
   created() {
@@ -519,6 +532,10 @@ export default {
             this.$data.snackbar = true;
           });
       }
+    },
+    onSelectCopy: function(event) {
+      console.log(event);
+      this.$data.copyForm = false;
     }
   }
 };
