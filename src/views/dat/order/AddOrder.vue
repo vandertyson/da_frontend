@@ -221,9 +221,9 @@
           </v-flex>
 
           <v-layout align-end justify-end class="mr-4">
-            <router-link to="/order" tag="button">
-              <v-btn primary large>CANCEL</v-btn>
-            </router-link>
+            <!-- <router-link to="/order" tag="button"> -->
+            <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
+            <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
             <v-btn primary large color="info" v-on:click="copy">COPY</v-btn>
           </v-layout>
@@ -233,6 +233,19 @@
           </v-snackbar>
         </v-layout>
       </v-container>
+      <v-dialog v-model="dialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Are you sure you want to cancel ?</v-card-title>
+          <v-card-text>All your actions might be unsaved</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat @click="dialog = false">No</v-btn>
+            <router-link to="/order" tag="button">
+              <v-btn color="green darken-1" flat @click="dialog = false">Yes</v-btn>
+            </router-link>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-form>
   </div>
 </template>
@@ -263,6 +276,7 @@ export default {
         { text: "Đơn vị", align: "left" },
         { text: "", align: "left" }
       ],
+      dialog: false,
       ready: false,
       customers: [],
       contacts: [],
@@ -272,7 +286,7 @@ export default {
       selected_contact: null,
       selectedSale: null,
       selectedEmployee: null,
-      selectedTrans:null,
+      selectedTrans: null,
       currency: Currency,
       menu_due_date: false,
       menu_doc_date: false,
@@ -280,7 +294,7 @@ export default {
       sales: [],
       employees: [],
       items: [],
-      trans:[],
+      trans: [],
       shipto: Shipto,
       selected_shipto: Shipto[0],
       selected_currency: Currency[0],

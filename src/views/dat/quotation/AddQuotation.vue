@@ -8,7 +8,7 @@
         <v-layout v-if="ready" row wrap>
           <v-flex md5>
             <v-card class="pa-4">
-              <h4 class="headline mb-0">Thông tin chung</h4>
+              <h4 class="headline mb-0">Thông tin chung báo giá</h4>
               <v-autocomplete
                 v-model="selectedCustomer"
                 label="Mã khách hàng"

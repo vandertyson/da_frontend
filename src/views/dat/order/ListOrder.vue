@@ -47,7 +47,8 @@
 
 <script>
 import { HTTP, URL } from "@/api/http-common";
-import Quotation from "@/api/quotations/quotation";
+//import Quotation from "@/api/quotations/quotation";
+import Order from "@/api/quotations/order";
 import { error } from "util";
 export default {
   components: {},

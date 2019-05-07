@@ -10,6 +10,12 @@ export const URL = {
   "addOrder": SERVER + "/salesorder/addOrder",
   "getOrderById": SERVER + "/salesorder/Order/",
 
+  "getDelivery": SERVER + "/delivery/deliveries",
+  "addDelivery": SERVER + "/delivery/addDelivery",
+  "getDeliveryById": SERVER + "/delivery/delivery/",
+  "updateDelivery": SERVER + "/delivery/updateDelivery",
+  "deleteDelivery": SERVER + "/delivery/deleteDelivery/",
+
   "getItem": SERVER + "/item/items",
   "getItembyId": SERVER + "/item/item/",
   "getCustomer": SERVER + "/customer/customers",
