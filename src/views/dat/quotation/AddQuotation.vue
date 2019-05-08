@@ -205,12 +205,12 @@
           </v-flex>
 
           <v-layout align-end justify-end class="mr-4">
-            <v-btn primary large color="error" v-on:click="print">Print</v-btn>
             <!-- <router-link to="/quotation" tag="button"> -->
             <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
             <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
             <v-btn primary large color="info" @click="copyForm = true">COPY</v-btn>
+            <v-btn primary large color="error" v-on:click="print">Print</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}

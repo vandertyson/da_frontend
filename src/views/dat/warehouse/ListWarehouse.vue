@@ -6,7 +6,7 @@
       </div>
       <v-layout v-if="ready" row wrap>
         <router-link to="/warehouse/add" tag="button">
-          <v-btn round large color="success" outline class="text-lg-right">Add new Warehouse</v-btn>
+          <v-btn round color="success" outline class="text-lg-right">Add new Warehouse</v-btn>
         </router-link>
         <v-flex md4>
           <v-text-field
@@ -29,12 +29,7 @@
                   <router-link v-bind:to="getEditRoute(props.item.code)" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
                   </router-link>
-                  <v-btn
-                    flat
-                    small
-                    color="error"
-                    v-on:click="deleteWhs(props.item.code)"
-                  >Delete</v-btn>
+                  <v-btn flat small color="error" v-on:click="deleteWhs(props.item.code)">Delete</v-btn>
                 </td>
               </template>
             </v-data-table>

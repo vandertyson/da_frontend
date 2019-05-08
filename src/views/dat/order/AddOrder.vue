@@ -226,6 +226,7 @@
             <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
             <v-btn primary large color="info" v-on:click="copy">COPY</v-btn>
+            <v-btn primary large color="error" v-on:click="print">Print</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
