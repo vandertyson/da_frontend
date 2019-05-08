@@ -14,7 +14,7 @@ export default [
     {
         title: 'Warehouse Management',
         group: 'Main',
-        icon: 'offline_bolt',
+        icon: 'inbox',
         name: 'warehouse',
     },
     {

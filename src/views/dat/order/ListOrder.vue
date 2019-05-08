@@ -5,6 +5,19 @@
     </div>
     <v-container v-if="ready" grid-list-xl fluid>
       <v-layout row wrap>
+        <v-card-title>
+          <h3>SALES ORDER</h3>
+        </v-card-title>
+        <v-spacer></v-spacer>
+        <v-flex md4>
+          <v-text-field
+            label="Search Order"
+            v-model="cardcode"
+            append-icon="search"
+            clearable
+            counter="100"
+          ></v-text-field>
+        </v-flex>
         <router-link to="/order/add" tag="button">
           <v-btn round color="success" class="text-lg-right">Add new Order</v-btn>
         </router-link>
@@ -13,6 +26,7 @@
             <v-data-table
               :headers="headers"
               :items="orders"
+              :search="cardcode"
               class="elevation-1"
               v-bind:disable-initial-sort="true"
             >
@@ -32,6 +46,13 @@
                   </router-link>
                   <v-btn flat small color="error" v-on:click="deleteOrder(props.item.id)">Delete</v-btn>
                 </td>
+              </template>
+              <template v-slot:no-results>
+                <v-alert
+                  :value="true"
+                  color="error"
+                  icon="warning"
+                >Your search for "{{ cardcode }}" found no results.</v-alert>
               </template>
             </v-data-table>
           </v-card>
@@ -54,6 +75,7 @@ export default {
   components: {},
   data() {
     return {
+      cardcode: "",
       headers: [
         { text: "ID", align: "left", value: "id" },
         { text: "Customer name", align: "left", value: "name" },

@@ -5,14 +5,31 @@
     </div>
     <v-container v-if="ready" grid-list-xl fluid>
       <v-layout row wrap>
+        <v-card-title>
+          <h3>SALES QUOTATION</h3>
+        </v-card-title>
+        <v-spacer></v-spacer>
+        <v-flex md4>
+          <v-text-field
+            label="Search Quotation"
+            v-model="cardcode"
+            append-icon="search"
+            
+            clearable
+            counter="100"
+          ></v-text-field>
+        </v-flex>
         <router-link to="/quotation/add" tag="button">
           <v-btn round color="success" class="text-lg-right">Add new quotation</v-btn>
         </router-link>
+        <!-- <v-spacer></v-spacer> -->
+
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
             <v-data-table
               :headers="headers"
               :items="quotations"
+              :search="cardcode"
               class="elevation-1"
               v-bind:disable-initial-sort="true"
             >
@@ -32,6 +49,13 @@
                   </router-link>
                   <v-btn flat small color="error" v-on:click="deleteQuot(props.item.id)">Delete</v-btn>
                 </td>
+              </template>
+              <template v-slot:no-results>
+                <v-alert
+                  :value="true"
+                  color="error"
+                  icon="warning"
+                >Your search for "{{ cardcode }}" found no results.</v-alert>
               </template>
             </v-data-table>
           </v-card>
@@ -53,6 +77,7 @@ export default {
   components: {},
   data() {
     return {
+      cardcode: "",
       headers: [
         { text: "ID", align: "left", value: "id" },
         { text: "Customer name", align: "left", value: "name" },

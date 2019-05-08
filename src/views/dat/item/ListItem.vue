@@ -37,6 +37,13 @@
                   <v-btn flat small color="error" v-on:click="deleteItem(props.item.code)">Delete</v-btn>
                 </td>
               </template>
+              <!-- <template v-slot:no-results>
+                <v-alert
+                  :value="true"
+                  color="error"
+                  icon="warning"
+                >Your search for "{{ itemName }}" found no results.</v-alert>
+              </template> -->
             </v-data-table>
           </v-card>
         </v-flex>
