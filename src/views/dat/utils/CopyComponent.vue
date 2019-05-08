@@ -1,18 +1,15 @@
 <template>
-  <v-card md6>
-    <v-card-title>
-      <span class="headline">Select a source to copy</span>
-    </v-card-title>
+  <v-card md6>    
     <v-card-text>
       <v-tabs v-model="active" tabs grow>
-        <v-tab v-for="source in copySource" :key="source.type">{{source.name}}</v-tab>
+        <v-tab v-for="source in copySource" :key="source.type">Copy from {{source.name}}</v-tab>
         <v-tab-item v-for="source in copySource" :key="source.type">
-          <list-quotation></list-quotation>
+          <list-quotation v-if="source.type === 'quot'" :isSelect="true"></list-quotation>          
         </v-tab-item>
       </v-tabs>
     </v-card-text>
-    <v-card-actions class="justify-center">
-      <v-btn color="blue darken-1" flat large @click="select">Select</v-btn>
+    <v-card-actions class="justify-center">      
+      <v-btn color="blue darken-1" flat large @click="select">Cancel</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -29,6 +26,7 @@ export default {
   },
   data() {
     return {
+      active: "quot",
       copySource: [
         {
           type: "quot",
@@ -41,7 +39,6 @@ export default {
           get_link: URL.getOrder
         }
       ],
-      acvtive: "quot"
     };
   },
   computed: {},

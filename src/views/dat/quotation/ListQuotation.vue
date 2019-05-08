@@ -5,9 +5,6 @@
     </div>
     <v-container v-if="ready" grid-list-xl fluid>
       <v-layout row wrap>
-        <router-link to="/quotation/add" tag="button">
-          <v-btn color="success" class="text-lg-right">Add new quotation</v-btn>
-        </router-link>
         <v-card-title>
           <h3>SALES QUOTATION</h3>
         </v-card-title>
@@ -16,16 +13,14 @@
           <v-text-field
             label="Search Quotation"
             v-model="cardcode"
-            append-icon="search"            
+            append-icon="search"
             clearable
             counter="100"
           ></v-text-field>
         </v-flex>
-        <router-link to="/quotation/add" tag="button">
+        <router-link v-if="!isSelect" to="/quotation/add" tag="button">
           <v-btn round color="success" class="text-lg-right">Add new quotation</v-btn>
         </router-link>
-        <!-- <v-spacer></v-spacer> -->
-
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
             <v-data-table
@@ -50,6 +45,14 @@
                     <v-btn flat small color="info">Edit</v-btn>
                   </router-link>
                   <v-btn flat small color="error" v-on:click="deleteQuot(props.item.id)">Delete</v-btn>
+                </td>
+                <td v-if="!isSelect">
+                  <v-btn
+                    color="blue darken-1"
+                    flat
+                    large
+                    @click="selectToCopy(props.item.id)"
+                  >Select</v-btn>
                 </td>
               </template>
               <template v-slot:no-results>
@@ -77,6 +80,9 @@ import Quotation from "@/api/quotations/quotation";
 import { error } from "util";
 export default {
   name: "list-quotation",
+  props: {
+    isSelect: false
+  },
   components: {},
   data() {
     return {
@@ -136,6 +142,9 @@ export default {
             this.snackbar = true;
           });
       }
+    },
+    selectToCopy: function(id) {
+      this.$emit("select", { id: id });
     }
   }
 };
