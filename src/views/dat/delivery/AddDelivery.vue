@@ -222,16 +222,21 @@
 
           <v-layout align-end justify-end class="mr-4">
             <!-- <router-link to="/delivery" tag="button"> -->
-            <v-btn primary large  v-on:click="dialog=true">CANCEL</v-btn>
+            <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
             <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
-            <v-btn primary large color="info" v-on:click="copy">COPY</v-btn>
+            <v-btn primary large color="info" @click="copyForm = true">COPY</v-btn>
             <v-btn primary large color="error" v-on:click="print">Print</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
             <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
           </v-snackbar>
+          <v-dialog v-model="copyForm" max-width="70%">
+            <template>
+              <copy-component @select="onSelectCopy" md6></copy-component>
+            </template>
+          </v-dialog>
         </v-layout>
       </v-container>
       <v-dialog v-model="dialog" persistent max-width="290">
@@ -256,6 +261,7 @@ import { HTTP, URL } from "@/api/http-common";
 // import Countries from "@/api/country";
 import Currency from "@/api/quotations/currency";
 import Shipto from "@/api/quotations/shipto";
+import CopyComponent from "../utils/CopyComponent";
 import { setTimeout } from "timers";
 import { Promise } from "q";
 // import Sales from "@/api/quotations/sales";
@@ -263,7 +269,9 @@ import { Promise } from "q";
 // import Items from "@/api/quotations/item";
 
 export default {
-  components: {},
+  components: {
+    CopyComponent
+  },
   data() {
     return {
       headers: [
@@ -277,7 +285,7 @@ export default {
         { text: "Đơn vị", align: "left" },
         { text: "", align: "left" }
       ],
-      dialog:false,
+      dialog: false,
       ready: false,
       customers: [],
       contacts: [],
@@ -316,7 +324,8 @@ export default {
       lam_tron: 0,
       valid: false,
       snackbar: false,
-      message: null
+      message: null,
+      copyForm: false
     };
   },
   created() {
@@ -545,6 +554,36 @@ export default {
           .catch(e => {
             console.log(e);
             this.$data.message = "Some errors happened!";
+            this.$data.snackbar = true;
+          });
+      }
+    },
+    onSelectCopy: function(event) {
+      this.$data.copyForm = false;
+      if (event["type"] == "order") {
+        HTTP.get(URL.getOrderById + event["id"])
+          .then(response => {
+            //doan nay gan lai cac truong cua cai order vao cac bien tren delivery 
+            console.log(response.data);
+            this.$data.selectedCustomer = response.data.code;
+            this.customnerSelect(response.data.code);
+            this.$data.selected_contact_person = parseInt(
+              response.data.contactCode
+            );
+            this.$data.selectedSale = parseInt(response.data.saleEmployee);
+            this.$data.selectedEmployee = parseInt(response.data.employee);
+            //this.$data.selectedTrans = parseInt(response.data.trasnport);
+            this.$data.selected_items = response.data.listItem;
+            this.$data.duedate = response.data.dueDate;
+            this.$data.docdate = response.data.docDate;
+            this.$data.taxdate = response.data.taxDate;
+            this.$data.selected_currency = response.data.currency;
+            //this.$data.selected_shipto = response.data.shipto;
+            this.calculate_sum();
+          })
+          .catch(error => {
+            console.log(err);
+            this.$data.message = "Một số thông tin lấy lỗi";
             this.$data.snackbar = true;
           });
       }

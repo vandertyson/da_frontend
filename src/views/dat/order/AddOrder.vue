@@ -225,13 +225,18 @@
             <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
             <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
-            <v-btn primary large color="info" v-on:click="copy">COPY</v-btn>
-            <v-btn primary large color="error" v-on:click="print">Print</v-btn>
+            <v-btn primary large color="info" @click="copyForm = true">COPY</v-btn>
+            <v-btn primary large color="error">Print</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
             <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
           </v-snackbar>
+          <v-dialog v-model="copyForm" max-width="70%">
+            <template>
+              <copy-component @select="onSelectCopy" md6></copy-component>
+            </template>
+          </v-dialog>
         </v-layout>
       </v-container>
       <v-dialog v-model="dialog" persistent max-width="290">
@@ -258,14 +263,18 @@ import Currency from "@/api/quotations/currency";
 import Shipto from "@/api/quotations/shipto";
 import { setTimeout } from "timers";
 import { Promise } from "q";
+import CopyComponent from "../utils/CopyComponent";
 // import Sales from "@/api/quotations/sales";
 // import Employees from "@/api/quotations/employee";
 // import Items from "@/api/quotations/item";
 
 export default {
-  components: {},
+  components: {
+    CopyComponent
+  },
   data() {
     return {
+      address: "",
       headers: [
         { text: "Mã hàng hóa", align: "left" },
         { text: "Mô tả hàng hóa", align: "left" },
@@ -316,7 +325,8 @@ export default {
       lam_tron: 0,
       valid: false,
       snackbar: false,
-      message: null
+      message: null,
+      copyForm: false
     };
   },
   created() {
@@ -545,6 +555,36 @@ export default {
           .catch(e => {
             console.log(e);
             this.$data.message = "Some errors happened!";
+            this.$data.snackbar = true;
+          });
+      }
+    },
+    onSelectCopy: function(event) {
+      this.$data.copyForm = false;
+      if (event["type"] == "quot") {
+        HTTP.get(URL.getQuotById + event["id"])
+          .then(response => {
+            //doan nay ong gan lai cac truong cua cai quotation vao cac bien tren order la dc
+            console.log(response.data);
+            this.$data.selectedCustomer = response.data.code;
+            this.customnerSelect(response.data.code);
+            this.$data.selected_contact_person = parseInt(
+              response.data.contactCode
+            );
+            this.$data.selectedSale = parseInt(response.data.saleEmployee);
+            this.$data.selectedEmployee = parseInt(response.data.employee);
+            //this.$data.selectedTrans = parseInt(response.data.trasnport);
+            this.$data.selected_items = response.data.listItem;
+            this.$data.duedate = response.data.dueDate;
+            this.$data.docdate = response.data.docDate;
+            this.$data.taxdate = response.data.taxDate;
+            this.$data.selected_currency = response.data.currency;
+            //this.$data.selected_shipto = response.data.shipto;
+            this.calculate_sum();
+          })
+          .catch(error => {
+            console.log(err);
+            this.$data.message = "Một số thông tin lấy lỗi";
             this.$data.snackbar = true;
           });
       }

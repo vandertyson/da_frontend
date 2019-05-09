@@ -46,6 +46,9 @@
                   </router-link>
                   <v-btn flat small color="error" v-on:click="deleteOrder(props.item.id)">Delete</v-btn>
                 </td>
+                <td v-if="isSelect">
+                  <v-btn color="blue darken-1" flat @click="selectToCopy(props.item.id)">Select</v-btn>
+                </td>
               </template>
               <template v-slot:no-results>
                 <v-alert
@@ -130,6 +133,9 @@ export default {
             this.snackbar = true;
           });
       }
+    },
+    selectToCopy: function(id) {
+      this.$emit("selectCopy", { id: id, type: "order" });
     }
   }
 };

@@ -50,6 +50,14 @@
                 type="number"
                 :rules="[(v) => !!v || 'Phải nhập số điện thoại']"
               ></v-text-field>
+              <v-text-field
+                label="Tài khoản ngân hàng"
+                v-model="bankcode"
+                counter
+                maxlength="30"
+                clearable
+                :rules="[(v) => !!v || 'Phải nhập tài khoản ngân hàng']"
+              ></v-text-field>
               <v-menu
                 v-model="menu_create_date"
                 :close-on-content-click="false"

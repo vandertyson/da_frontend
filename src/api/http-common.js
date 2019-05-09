@@ -9,12 +9,19 @@ export const URL = {
   "getOrder": SERVER + "/salesorder/Orders",
   "addOrder": SERVER + "/salesorder/addOrder",
   "getOrderById": SERVER + "/salesorder/Order/",
+  "confirm": SERVER + "/salesorder/confirm/",
 
   "getDelivery": SERVER + "/delivery/deliveries",
   "addDelivery": SERVER + "/delivery/addDelivery",
   "getDeliveryById": SERVER + "/delivery/delivery/",
   "updateDelivery": SERVER + "/delivery/updateDelivery",
   "deleteDelivery": SERVER + "/delivery/deleteDelivery/",
+
+  "getInvoice": SERVER + "/invoice/invoices",
+  "addInvoice": SERVER + "/invoice/addInvoice",
+  "getInvoiceById": SERVER + "/invoice/invoice/",
+  "updateInvoice": SERVER + "/invoice/updateInvoice",
+  "deleteInvoice": SERVER + "/invoice/deleteInvoice/",
 
   "getItem": SERVER + "/item/items",
   "getItembyId": SERVER + "/item/item/",

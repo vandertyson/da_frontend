@@ -110,10 +110,10 @@ export default {
     this.stats = Stat;
     // this.orders = AppQuot;
     this.getQuot();
+    this.getOrder();
   },
   methods: {
     // lấy về những quotation chưa confirm
-    // ông thử viết đi
     getQuot: function() {
       HTTP.get(URL.getQuot, {
         params: {
@@ -121,7 +121,7 @@ export default {
         }
       })
         .then(response => {
-          this.$data.quots = []
+          this.$data.quots = [];
           for (let index = 0; index < response.data.length; index++) {
             const element = response.data[index];
             var x = {
@@ -138,17 +138,20 @@ export default {
         });
     },
     refreshQuot: function() {
-      this.getQuot()
+      this.getQuot();
     },
     refreshOrder: function() {
-      this.orders = [];
+      this.getOrder();
     },
     gotoQuout: function(id) {
       console.log("/quotation/edit/" + id);
       this.$router.push("/quotation/edit/" + id);
     },
-    gotoOrder: function() {},
-    approve: function(id) {      
+    gotoOrder: function(id) {
+      console.log("/order/edit/" + id);
+      this.$router.push("/order/edit/" + id);
+    },
+    approve: function(id) {
       HTTP.get(URL.confirm, {
         params: {
           id: parseInt(id),
@@ -156,8 +159,48 @@ export default {
         }
       })
         .then(response => {
-          this.getQuot()
+          this.getQuot();
           this.$data.message = "Quotation approved successfully!";
+          this.$data.snackbar = true;
+        })
+        .catch(error => {
+          this.$data.message = "Some errors happened!";
+          this.$data.snackbar = true;
+        });
+    },
+    getOrder: function() {
+      HTTP.get(URL.getOrder, {
+        params: {
+          status: "O"
+        }
+      })
+        .then(response => {
+          this.$data.orders = [];
+          for (let index = 0; index < response.data.length; index++) {
+            const element = response.data[index];
+            var x = {
+              id: element.id,
+              headline: element.name,
+              title: element.dueDate,
+              subtitle: element.slpname
+            };
+            this.$data.orders.push(x);
+          }
+        })
+        .catch(error => {
+          this.$data.ready = true;
+        });
+    },
+    approve: function(id) {
+      HTTP.get(URL.confirm, {
+        params: {
+          id: parseInt(id),
+          confirm: "C"
+        }
+      })
+        .then(response => {
+          this.getOrder();
+          this.$data.message = "Order approved successfully!";
           this.$data.snackbar = true;
         })
         .catch(error => {

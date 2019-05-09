@@ -40,19 +40,14 @@
                   class="text-xs-left"
                 >{{ getName(props.item.emfirstname, props.item.emplastname) }}</td>
                 <td class="text-xs-left">{{ props.item.dueDate }}</td>
-                <td class="text-xs-left">
+                <td v-if="!isSelect" class="text-xs-left">
                   <router-link v-bind:to="getEditRoute(props.item.id)" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
                   </router-link>
                   <v-btn flat small color="error" v-on:click="deleteQuot(props.item.id)">Delete</v-btn>
                 </td>
-                <td v-if="!isSelect">
-                  <v-btn
-                    color="blue darken-1"
-                    flat
-                    large
-                    @click="selectToCopy(props.item.id)"
-                  >Select</v-btn>
+                <td v-if="isSelect">
+                  <v-btn color="blue darken-1" flat @click="selectToCopy(props.item.id)">Select</v-btn>
                 </td>
               </template>
               <template v-slot:no-results>
@@ -144,7 +139,7 @@ export default {
       }
     },
     selectToCopy: function(id) {
-      this.$emit("select", { id: id });
+      this.$emit("selectCopy", { id: id, type: "quot" });
     }
   }
 };
