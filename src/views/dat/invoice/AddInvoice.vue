@@ -587,6 +587,9 @@ export default {
             this.$data.snackbar = true;
           });
       }
+    },
+    print: function(){
+       alert("Coming soon!");
     }
   }
 };

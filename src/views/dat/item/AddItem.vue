@@ -155,14 +155,14 @@ export default {
           .then(response => {
             //doan nay gan lai cac bien vao trong
             console.log(response.data);
-            this.$data.selectedGroup = parseInt(response.data.groupname);
+            this.$data.selectedGroup = parseInt(response.data.group);
             this.$data.code = response.data.code;
             this.$data.name = response.data.name;
             this.$data.vat = response.data.vat;
             this.$data.onhand = response.data.onhand;
             this.$data.uomcode = response.data.uomcode;
             this.$data.createdate = response.data.createdate;
-            console.log(this.$data.groupname);
+            console.log(this.$data.group);
           })
           .catch(error => {
             console.log(error);
@@ -183,7 +183,7 @@ export default {
       var post_param = {
         code: this.$data.code,
         name: this.$data.name,
-        groupname: this.$data.selectedGroup,
+        group: this.$data.selectedGroup,
         vat: this.$data.vat,
         onhand: this.$data.onhand,
         uomcode: this.$data.uomcode,

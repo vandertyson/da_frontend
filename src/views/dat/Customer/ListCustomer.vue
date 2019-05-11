@@ -6,23 +6,26 @@
       </div>
       <v-layout v-if="ready" row wrap>
         <router-link to="/customer/add" tag="button">
-          <v-btn round  color="success" outline class="text-lg-right">Add new Customer</v-btn>
+          <v-btn round color="success" outline class="text-lg-right">Add new Customer</v-btn>
         </router-link>
         <v-flex md5>
           <v-text-field
             label="Search Customer"
             v-model="customerName"
             append-icon="search"
-            v-on:keyup.enter="searchCustomer()"
             clearable
             counter="100"
             hint="Customer name"
-            type="text"
           ></v-text-field>
         </v-flex>
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
-            <v-data-table :headers="headers" :items="customers" class="elevation-1">
+            <v-data-table
+              :headers="headers"
+              :items="customers"
+              :search="customerName"
+              class="elevation-1"
+            >
               <template v-slot:items="props">
                 <td class="text-xs-left">{{ props.item.code }}</td>
                 <td class="text-xs-left">{{ props.item.name }}</td>
@@ -43,6 +46,13 @@
                   >Delete</v-btn>
                 </td>
               </template>
+              <template v-slot:no-results>
+                <v-alert
+                  :value="true"
+                  color="error"
+                  icon="warning"
+                >Your search for "{{ customerName }}" found no results</v-alert>
+              </template>
             </v-data-table>
           </v-card>
         </v-flex>
@@ -62,6 +72,7 @@ export default {
   components: {},
   data() {
     return {
+      customerName: "",
       headers: [
         { text: "Customer code", align: "left", value: "code" },
         { text: "Customer name", align: "left", value: "name" },
@@ -111,21 +122,21 @@ export default {
             this.snackbar = true;
           });
       }
-    },
-    searchCustomer: function() {
-      HTTP.get(URL.getCustomer, {
-        params: {
-          name: this.$data.customerName
-        }
-      })
-        .then(response => {
-          this.$data.customers = response.data;
-        })
-        .catch(error => {
-          this.$data.message = "Đã có lỗi";
-          this.snackbar = true;
-        });
     }
+    // searchCustomer: function() {
+    //   HTTP.get(URL.getCustomer, {
+    //     params: {
+    //       name: this.$data.customerName
+    //     }
+    //   })
+    //     .then(response => {
+    //       this.$data.customers = response.data;
+    //     })
+    //     .catch(error => {
+    //       this.$data.message = "Đã có lỗi";
+    //       this.snackbar = true;
+    //     });
+    // }
   }
 };
 </script>

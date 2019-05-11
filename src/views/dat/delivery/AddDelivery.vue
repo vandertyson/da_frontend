@@ -137,7 +137,8 @@
           </v-flex>
           <v-flex md7>
             <v-card class="pa-4">
-              <h4 class="headline mb-0">Chi tiết đơn hàng bán</h4>
+              <h4 class="headline mb-0">Chi tiết xuất hàng</h4>
+
               <v-layout>
                 <v-flex md4>
                   <v-autocomplete
@@ -178,16 +179,29 @@
                 </v-flex>
               </v-layout>
               <v-divider></v-divider>
+
               <v-data-table :headers="headers" :items="selected_items" class="elevation-1 mt-4">
                 <template v-slot:items="props">
                   <td class="text-xs-left">{{ props.item.code || props.item.itemcode }}</td>
                   <td class="text-xs-left">{{ props.item.name || props.item.description }}</td>
                   <td class="text-xs-left">{{ props.item.quantity }}</td>
-                  <td class="text-xs-left">{{ formatMoney(props.item.price, 0, ".", ",") }}</td>
-                  <td class="text-xs-left">{{ props.item.discount || 0 }}</td>
-                  <td class="text-xs-left">{{ props.item.vat || 0}}</td>
+                  <!-- <td class="text-xs-left">{{ formatMoney(props.item.price, 0, ".", ",") }}</td> -->
+                  <!-- <td class="text-xs-left">{{ props.item.discount || 0 }}</td> -->
+                  <!-- <td class="text-xs-left">{{ props.item.vat || 0}}</td> -->
                   <td class="text-xs-left">{{ formatMoney(props.item.total, 0, ".", ",") }}</td>
-                  <td class="text-xs-left">{{ props.item.uom_code }}</td>
+
+                  <!-- <td class="text-xs-left">{{ props.item.uom_code }}</td> -->
+                  <td>
+                    <v-text-field
+                      v-model="props.item.so_luong_xuat"
+                      :rules="getRule(props.item)"
+                      label="Edit"
+                      single-line
+                    ></v-text-field>
+                  </td>
+                  <td class="text-xs-left">
+                    <v-btn primary color="info" v-on:click="xuat(props.item)">Xuất</v-btn>
+                  </td>
                   <td class="text-xs-left">
                     <v-btn flat small color="error" v-on:click="removeItem(props.index)">Remove</v-btn>
                   </td>
@@ -274,15 +288,18 @@ export default {
   },
   data() {
     return {
+      so_luong_xuat: 1,
       headers: [
         { text: "Mã hàng hóa", align: "left" },
         { text: "Mô tả hàng hóa", align: "left" },
         { text: "Số lượng", align: "left" },
-        { text: "Đơn giá", align: "left" },
-        { text: "Chiết khấu (%)", align: "left" },
-        { text: "Thuể (%)", align: "left" },
+        // { text: "Đơn giá", align: "left" },
+        // { text: "Chiết khấu (%)", align: "left" },
+        // { text: "Thuể (%)", align: "left" },
         { text: "Thành tiền", align: "left" },
-        { text: "Đơn vị", align: "left" },
+        // { text: "Đơn vị", align: "left" },
+        { text: "Số lượng xuất", align: "left" },
+        { text: "", align: "left" },
         { text: "", align: "left" }
       ],
       dialog: false,
@@ -325,7 +342,8 @@ export default {
       valid: false,
       snackbar: false,
       message: null,
-      copyForm: false
+      copyForm: false,
+      address: ""
     };
   },
   created() {
@@ -563,7 +581,7 @@ export default {
       if (event["type"] == "order") {
         HTTP.get(URL.getOrderById + event["id"])
           .then(response => {
-            //doan nay gan lai cac truong cua cai order vao cac bien tren delivery 
+            //doan nay gan lai cac truong cua cai order vao cac bien tren delivery
             console.log(response.data);
             this.$data.selectedCustomer = response.data.code;
             this.customnerSelect(response.data.code);
@@ -587,6 +605,19 @@ export default {
             this.$data.snackbar = true;
           });
       }
+    },
+    print: function() {
+      alert("Coming soon!");
+    },
+    getRule: function(item) {
+      console.log(item);
+      var maxItem = v =>
+        v <= item.quantity || "Không được xuất quá " + item.quantity;
+      var minItem = v => v > 0 || "Phải nhập >0";
+      return [maxItem, minItem];
+    },
+    xuat: function(item) {
+      alert("Coming soon!");
     }
   }
 };

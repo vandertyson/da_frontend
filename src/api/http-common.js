@@ -10,6 +10,7 @@ export const URL = {
   "addOrder": SERVER + "/salesorder/addOrder",
   "getOrderById": SERVER + "/salesorder/Order/",
   "confirm": SERVER + "/salesorder/confirm/",
+  "print": SERVER + "/salesorder/print/",
 
   "getDelivery": SERVER + "/delivery/deliveries",
   "addDelivery": SERVER + "/delivery/addDelivery",
@@ -54,6 +55,8 @@ export const URL = {
   "updateWhs": SERVER + "/warehouse/updateWarehouse",
   "addWhs": SERVER + "/warehouse/addWarehouse",
   "deleteWhs": SERVER + "/warehouse/deleteWarehouse/",
+
+
 
 
 }

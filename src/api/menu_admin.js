@@ -38,20 +38,25 @@ export default [
     {
         title: 'Sales Order Management',
         group: 'Main',
-        icon: 'assignment_turned_in',
+        icon: 'reorder',
         name: 'order',
     },
     {
         title: 'Delivery Management',
         group: 'Main',
-        icon: 'assignment_turned_in',
+        icon: 'assessment',
         name: 'delivery',
     },
     {
         title: 'AR Invoice Management',
         group: 'Main',
-        icon: 'assignment_turned_in',
+        icon: 'reorder',
         name: 'invoice',
     },
-
+    {
+        title: 'Payment Management',
+        group: 'Main',
+        icon: 'attach_money',
+        name: 'invoice',
+    },
 ];

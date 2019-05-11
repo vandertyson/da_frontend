@@ -11,7 +11,7 @@
         <v-spacer></v-spacer>
         <v-flex md4>
           <v-text-field
-            label="Search Quotation"
+            label="Search Quotation"  
             v-model="cardcode"
             append-icon="search"
             clearable

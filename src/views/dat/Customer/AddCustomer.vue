@@ -119,6 +119,7 @@ export default {
       name: "",
       contactperson: "",
       email: "",
+      bankcode: "",
       rules: {
         required: value => !!value || "Required.",
         counter: value => value.length <= 20 || "Max 20 characters",
@@ -148,6 +149,7 @@ export default {
           this.$data.email = response.data.email;
           this.$data.fax = response.data.fax;
           this.$data.phone1 = response.data.phone1;
+          this.$data.bankcode = response.data.bankcode;
           this.$data.createdate = response.data.createdate;
         })
         .catch(error => {});
@@ -163,6 +165,7 @@ export default {
         email: this.$data.email,
         fax: this.$data.fax,
         phone1: this.$data.phone1,
+        bankcode: this.$data.bankcode,
         createdate: this.$data.createdate
       };
 
@@ -198,6 +201,7 @@ export default {
       this.email = "";
       this.fax = 0;
       this.phone1 = 0;
+      this.bankcode = "";
     }
   }
 };

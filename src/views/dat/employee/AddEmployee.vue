@@ -44,12 +44,20 @@
                 </template>
                 <v-date-picker v-model="birthdate" @input="menu_birth_date = false"></v-date-picker>
               </v-menu>
-              <v-text-field
+              <v-radio-group v-model="sex" row>
+                <v-radio label="Male" value="M"></v-radio>
+                <v-radio label="Female" value="F"></v-radio>
+              </v-radio-group>
+              <!-- <div>
+                <input type="radio" v-model="sex" value="M"> Male
+                <input type="radio" v-model="sex" value="F"> Famale
+              </div>-->
+              <!-- <v-text-field
                 label="Giới tính"
                 v-model="sex"
                 clearable
                 :rules="[(v) => !!v || 'Phải chọn giới tính']"
-              ></v-text-field>
+              ></v-text-field>-->
               <v-autocomplete
                 v-model="selectedDept"
                 label="Bộ phận làm việc"
@@ -153,6 +161,7 @@ import { HTTP, URL } from "@/api/http-common";
 // import Customer from "@/api/quotations/customer";
 // import Countries from "@/api/country";
 import Bankcode from "@/api/quotations/bankcode";
+import Gender from "@/api/quotations/gender";
 // import Sales from "@/api/quotations/sales";
 // import Employees from "@/api/quotations/employee";
 // import Items from "@/api/quotations/item";
@@ -161,14 +170,14 @@ export default {
   components: {},
   data() {
     return {
-      dialog:false,
+      dialog: false,
       ready: false,
       id: "",
       firstname: "",
       lastname: "",
       menu_birth_date: false,
       birthdate: new Date().toISOString().substr(0, 10),
-      sex: "",
+      sex: null,
       selectedDept: null,
       dept: [],
       email: "",
@@ -202,7 +211,7 @@ export default {
           .then(response => {
             //doan nay gan lai cac bien vao trong
             console.log(response.data);
-            this.$data.selectedDept = parseInt(response.data.deptname);
+            this.$data.selectedDept = parseInt(response.data.dept);
             this.$data.id = response.data.id;
             this.$data.firstname = response.data.firstname;
             this.$data.lastname = response.data.lastname;
@@ -214,7 +223,7 @@ export default {
             this.$data.selected_bankcode = response.data.bankcode;
             this.$data.bankacount = response.data.bankacount;
             this.$data.startdate = response.data.startdate;
-            console.log(this.$data.deptname);
+            console.log(this.$data.dept);
           })
           .catch(error => {
             console.log(error);
@@ -238,8 +247,8 @@ export default {
         firstname: this.$data.firstname,
         lastname: this.$data.lastname,
         birthdate: this.$data.birthdate,
-        sex: this.$data.vat,
-        deptname: this.$data.selectedDept,
+        sex: this.$data.sex,
+        dept: this.$data.selectedDept,
         email: this.$data.email,
         jobtitle: this.$data.jobtitle,
         homecity: this.$data.homecity,
@@ -247,7 +256,6 @@ export default {
         bankacount: this.$data.bankacount,
         startdate: this.$data.startdate
       };
-
       if (this.$route.params.id) {
         post_param["id"] = this.$route.params.id;
         HTTP.put(URL.updateEmployee, post_param)

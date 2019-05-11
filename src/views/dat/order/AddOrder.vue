@@ -226,7 +226,7 @@
             <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
             <v-btn primary large color="info" @click="copyForm = true">COPY</v-btn>
-            <v-btn primary large color="error">Print</v-btn>
+            <v-btn primary large color="error" @click="snackbar = true">Print</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
@@ -261,7 +261,7 @@ import { HTTP, URL } from "@/api/http-common";
 // import Countries from "@/api/country";
 import Currency from "@/api/quotations/currency";
 import Shipto from "@/api/quotations/shipto";
-import { setTimeout } from "timers";
+//import { setTimeout } from "timers";
 import { Promise } from "q";
 import CopyComponent from "../utils/CopyComponent";
 // import Sales from "@/api/quotations/sales";
@@ -326,7 +326,8 @@ export default {
       valid: false,
       snackbar: false,
       message: null,
-      copyForm: false
+      copyForm: false,
+      alert: true
     };
   },
   created() {
@@ -536,7 +537,7 @@ export default {
         HTTP.put(URL.updateOrder, post_param)
           .then(response => {
             this.posts = response.data;
-            this.$data.message = "SalesOrder editted successfully!";
+            this.$data.message = "Sales Order editted successfully!";
             this.$data.snackbar = true;
           })
           .catch(e => {
@@ -549,7 +550,7 @@ export default {
         HTTP.post(URL.addOrder, post_param)
           .then(response => {
             this.posts = response.data;
-            this.$data.message = "SalesOrder added successfully!";
+            this.$data.message = "Sales Order added successfully!";
             this.$data.snackbar = true;
           })
           .catch(e => {
@@ -588,6 +589,11 @@ export default {
             this.$data.snackbar = true;
           });
       }
+    },
+    print: function() {
+    //   alert("comming soon");
+    this.message = "Sales Order printed successfully";
+    this.$data.snackbar = true;
     }
   }
 };

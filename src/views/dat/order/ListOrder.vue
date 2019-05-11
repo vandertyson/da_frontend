@@ -18,7 +18,7 @@
             counter="100"
           ></v-text-field>
         </v-flex>
-        <router-link to="/order/add" tag="button">
+        <router-link v-if="!isSelect" to="/order/add" tag="button">
           <v-btn round color="success" class="text-lg-right">Add new Order</v-btn>
         </router-link>
         <v-flex lg12 text-xs-right>
@@ -40,7 +40,7 @@
                   class="text-xs-left"
                 >{{ getName(props.item.emfirstname, props.item.emplastname) }}</td>
                 <td class="text-xs-left">{{ props.item.dueDate }}</td>
-                <td class="text-xs-left">
+                <td v-if="!isSelect" class="text-xs-left">
                   <router-link v-bind:to="getEditRoute(props.item.id)" tag="button">
                     <v-btn flat small color="info">Edit</v-btn>
                   </router-link>
@@ -76,6 +76,9 @@ import Order from "@/api/quotations/order";
 import { error } from "util";
 export default {
   components: {},
+  props: {
+    isSelect: false
+  },
   data() {
     return {
       cardcode: "",

@@ -204,15 +204,15 @@
             </v-card>
           </v-flex>
 
-          <v-layout align-end justify-end class="mr-4">            
-            <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>            
-            <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>            
+          <v-layout align-end justify-end class="mr-4">
+            <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
+            <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
             <v-btn primary large color="error">Print</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
             <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
-          </v-snackbar>          
+          </v-snackbar>
         </v-layout>
       </v-container>
       <v-dialog v-model="dialog" persistent max-width="290">
@@ -236,15 +236,14 @@ import { HTTP, URL } from "@/api/http-common";
 // import Customer from "@/api/quotations/customer";
 // import Countries from "@/api/country";
 import Currency from "@/api/quotations/currency";
-import { setTimeout } from "timers";
+//import { setTimeout } from "timers";
 import { Promise } from "q";
 // import Sales from "@/api/quotations/sales";
 // import Employees from "@/api/quotations/employee";
 // import Items from "@/api/quotations/item";
 
 export default {
-  components: {    
-  },
+  components: {},
   data() {
     return {
       headers: [
@@ -293,7 +292,7 @@ export default {
       lam_tron: 0,
       valid: false,
       snackbar: false,
-      message: null,      
+      message: null
     };
   },
   created() {
@@ -518,7 +517,7 @@ export default {
             this.$data.snackbar = true;
           });
       }
-    },    
+    }
   }
 };
 </script>

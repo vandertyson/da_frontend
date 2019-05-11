@@ -24,7 +24,8 @@ export default {
   name: "copy-component",
   components: {
     ListQuotation,
-    ListOrder
+    ListOrder,
+    ListDelivery
   },
   data() {
     return {
@@ -57,7 +58,7 @@ export default {
       this.$emit("select", event);
     },
     cancel: function() {
-      this.$emit("select", null);
+      this.$emit("select", {"type":"cancel"});
     }
   }
 };
