@@ -305,6 +305,7 @@ export default {
       items: [],
       trans: [],
       shipto: Shipto,
+      address:"",
       selected_shipto: Shipto[0],
       selected_currency: Currency[0],
       current_item: {

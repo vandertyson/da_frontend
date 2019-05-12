@@ -185,26 +185,27 @@
                   <td class="text-xs-left">{{ props.item.code || props.item.itemcode }}</td>
                   <td class="text-xs-left">{{ props.item.name || props.item.description }}</td>
                   <td class="text-xs-left">{{ props.item.quantity }}</td>
-                  <!-- <td class="text-xs-left">{{ formatMoney(props.item.price, 0, ".", ",") }}</td> -->
-                  <!-- <td class="text-xs-left">{{ props.item.discount || 0 }}</td> -->
-                  <!-- <td class="text-xs-left">{{ props.item.vat || 0}}</td> -->
+                  <td class="text-xs-left">{{ formatMoney(props.item.price, 0, ".", ",") }}</td>
+                  <td class="text-xs-left">{{ props.item.discount || 0 }}</td>
+                  <td class="text-xs-left">{{ props.item.vat || 0}}</td>
                   <td class="text-xs-left">{{ formatMoney(props.item.total, 0, ".", ",") }}</td>
-
-                  <!-- <td class="text-xs-left">{{ props.item.uom_code }}</td> -->
+                  <td class="text-xs-left">{{ props.item.minus }}</td>
                   <td>
                     <v-text-field
+                      v-if="props.item.minus > 0"
                       v-model="props.item.so_luong_xuat"
                       :rules="getRule(props.item)"
                       label="Edit"
                       single-line
                     ></v-text-field>
+                    <p v-if="props.item.minus == 0">Đã xuất đủ</p>
                   </td>
-                  <td class="text-xs-left">
+                  <td v-if="props.item.minus > 0" class="text-xs-left">
                     <v-btn primary color="info" v-on:click="xuat(props.item)">Xuất</v-btn>
                   </td>
-                  <td class="text-xs-left">
+                  <!-- <td class="text-xs-left">
                     <v-btn flat small color="error" v-on:click="removeItem(props.index)">Remove</v-btn>
-                  </td>
+                  </td>-->
                 </template>
               </v-data-table>
               <v-divider></v-divider>
@@ -288,19 +289,20 @@ export default {
   },
   data() {
     return {
-      so_luong_xuat: 1,
+      copy_from_source: {},
       headers: [
         { text: "Mã hàng hóa", align: "left" },
         { text: "Mô tả hàng hóa", align: "left" },
         { text: "Số lượng", align: "left" },
-        // { text: "Đơn giá", align: "left" },
-        // { text: "Chiết khấu (%)", align: "left" },
-        // { text: "Thuể (%)", align: "left" },
+        { text: "Đơn giá", align: "left" },
+        { text: "Chiết khấu (%)", align: "left" },
+        { text: "Thuể (%)", align: "left" },
         { text: "Thành tiền", align: "left" },
-        // { text: "Đơn vị", align: "left" },
+        { text: "Số lượng còn phải xuất", align: "left" },
         { text: "Số lượng xuất", align: "left" },
-        { text: "", align: "left" },
         { text: "", align: "left" }
+
+        // { text: "", align: "left" }
       ],
       dialog: false,
       ready: false,
@@ -381,11 +383,8 @@ export default {
               this.$data.taxdate = response.data.taxDate;
               this.$data.selected_currency = response.data.currency;
               this.$data.selected_shipto = response.data.shipto;
+              this.$data.address = response.data.address;
               this.calculate_sum();
-              console.log(this.$data.selectedCustomer);
-              console.log(this.$data.saleEmployee);
-              console.log(this.$data.employee);
-              console.log(this.$data.trasnport);
             })
             .catch(error => {
               console.log(error);
@@ -504,11 +503,13 @@ export default {
       );
     },
     save: function() {
-      if (!this.$refs.form.validate()) {
-        this.$data.message = "Một số trường chưa được nhập. Không thể lưu";
-        this.snackbar = true;
-        return;
-      }
+      // if (!this.$refs.form.validate()) {
+      //   console.log(this.$refs.form)
+      //   this.$data.message = "Một số trường chưa được nhập. Không thể lưu";
+        
+      //   this.snackbar = true;
+      //   return;
+      // }
       if (
         this.$data.selected_items === undefined ||
         this.$data.selected_items.length == 0
@@ -529,10 +530,13 @@ export default {
         taxDate: this.$data.taxdate,
         currency: this.$data.selected_currency,
         shipto: this.$data.selected_shipto,
+        address: this.$data.address,
         listItem: []
       };
       var si = this.$data.selected_items;
+      console.log(si[0])
       for (let i = 0; i < si.length; i++) {
+        
         post_param.listItem.push({
           itemcode: si[i].code || si[i].itemcode,
           description: si[i].name || si[i].description,
@@ -579,10 +583,14 @@ export default {
     onSelectCopy: function(event) {
       this.$data.copyForm = false;
       if (event["type"] == "order") {
+        this.$data.copy_from_source = {
+          type: "order"
+        };
         HTTP.get(URL.getOrderById + event["id"])
           .then(response => {
             //doan nay gan lai cac truong cua cai order vao cac bien tren delivery
             console.log(response.data);
+            this.$data.copy_from_source["id"] = response.data.id;
             this.$data.selectedCustomer = response.data.code;
             this.customnerSelect(response.data.code);
             this.$data.selected_contact_person = parseInt(
@@ -610,14 +618,28 @@ export default {
       alert("Coming soon!");
     },
     getRule: function(item) {
-      console.log(item);
-      var maxItem = v =>
-        v <= item.quantity || "Không được xuất quá " + item.quantity;
+      var maxItem = v => v <= item.minus || "Không được xuất quá " + item.minus;
       var minItem = v => v > 0 || "Phải nhập >0";
       return [maxItem, minItem];
     },
     xuat: function(item) {
-      alert("Coming soon!");
+      console.log(item);
+      var post_param = {
+        id: this.$data.copy_from_source["id"],
+        itemID: item.itemcode,
+        num: parseInt(item["so_luong_xuat"])
+      };
+      HTTP.post(URL.export, null, { params: post_param })
+        .then(response => {
+          this.$data.message = "Xuất thành công!";
+          item.minus -= post_param["num"];
+          this.$data.snackbar = true;
+        })
+        .catch(e => {
+          console.log(e);
+          this.$data.message = "Some errors happened!";
+          this.$data.snackbar = true;
+        });
     }
   }
 };

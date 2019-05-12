@@ -71,7 +71,7 @@
       <v-flex md3 sm3 xs12 class="pa-4">
         <v-card color="info">
           <v-card-title primary-title class="white--text justify-center">
-            <div class="text-center display-4">{{stat.number}}</div>
+            <div class="text-center display-4">{{stat.count}}</div>
           </v-card-title>
           <v-card-actions class="justify-center">
             <v-btn flat dark>{{stat.name}}</v-btn>
@@ -93,7 +93,6 @@
 <script>
 import { HTTP, URL } from "@/api/http-common";
 import AppQuot from "@/api/quotations/approve_quotation";
-import Stat from "@/api/quotations/stat";
 // import Countries from "@/api/country";
 export default {
   data() {
@@ -106,11 +105,11 @@ export default {
       message: null
     };
   },
-  created() {
-    this.stats = Stat;
+  created() {    
     // this.orders = AppQuot;
     this.getQuot();
     this.getOrder();
+    this.getStat();
   },
   methods: {
     // lấy về những quotation chưa confirm
@@ -206,6 +205,16 @@ export default {
         .catch(error => {
           this.$data.message = "Some errors happened!";
           this.$data.snackbar = true;
+        });
+    },
+    getStat() {
+      HTTP.get(URL.count)
+        .then(response => {
+          this.$data.stats = response.data;
+          this.$data.ready = true;
+        })
+        .catch(error => {
+          this.$data.ready = true;
         });
     }
   }

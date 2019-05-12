@@ -55,7 +55,8 @@ export const URL = {
   "updateWhs": SERVER + "/warehouse/updateWarehouse",
   "addWhs": SERVER + "/warehouse/addWarehouse",
   "deleteWhs": SERVER + "/warehouse/deleteWarehouse/",
-
+  "export": SERVER + "/salesorder/export",
+  "count": SERVER + "/quotation/count",
 
 
 
