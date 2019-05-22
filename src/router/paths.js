@@ -284,5 +284,32 @@ export default [
       /* webpackChunkName: "routes" */
       `@/views/dat/invoice/AddInvoice.vue`
     )
+  },
+  {
+    path: '/payment',
+    meta: { breadcrumb: true },
+    name: 'payment',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/payment/ListPayment.vue`
+    )
+  },
+  {
+    path: '/payment/add',
+    meta: { breadcrumb: true },
+    name: 'payment/add',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/payment/AddPayment.vue`
+    )
+  },
+  {
+    path: '/payment/edit/:id',
+    meta: { breadcrumb: true },
+    name: 'payment/edit',
+    component: () => import(
+      /* webpackChunkName: "routes" */
+      `@/views/dat/payment/AddPayment.vue`
+    )
   }
 ];

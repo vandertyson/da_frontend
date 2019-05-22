@@ -4,12 +4,13 @@ export const URL = {
   "getQuot": SERVER + "/quotation/quotations",
   "addQuot": SERVER + "/quotation/addQuotation",
   "getQuotById": SERVER + "/quotation/quotation/",
-  "confirm": SERVER + "/quotation/confirm/",
+  "confirmQuot": SERVER + "/quotation/confirm/",
+  "download": SERVER + "/quotation/export/",
 
   "getOrder": SERVER + "/salesorder/Orders",
   "addOrder": SERVER + "/salesorder/addOrder",
   "getOrderById": SERVER + "/salesorder/Order/",
-  "confirm": SERVER + "/salesorder/confirm/",
+  "confirmOrder": SERVER + "/salesorder/confirm/",
   "print": SERVER + "/salesorder/print/",
 
   "getDelivery": SERVER + "/delivery/deliveries",
@@ -57,6 +58,9 @@ export const URL = {
   "deleteWhs": SERVER + "/warehouse/deleteWarehouse/",
   "export": SERVER + "/salesorder/export",
   "count": SERVER + "/quotation/count",
+  "getPaymentById": SERVER + "/payment/payment",
+  "updatePayment": SERVER + "/payment/updatePayment",
+  "addPayment": SERVER + "/payment/addPayment",
 
 
 

@@ -6,23 +6,25 @@
       </div>
       <v-layout v-if="ready" row wrap>
         <router-link to="/employee/add" tag="button">
-          <v-btn round  color="success" outline class="text-lg-right">Add new Employee</v-btn>
+          <v-btn round color="success" outline class="text-lg-right">Add new Employee</v-btn>
         </router-link>
         <v-flex md4>
           <v-text-field
             label="Search Employee"
             v-model="empName"
             append-icon="search"
-            v-on:keyup.enter="searchEmployee()"
             clearable
             counter="100"
-            hint="Employee firstname"
-            type="text"
           ></v-text-field>
         </v-flex>
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
-            <v-data-table :headers="headers" :items="employees" class="elevation-1">
+            <v-data-table
+              :headers="headers"
+              :items="employees"
+              :search="empName"
+              class="elevation-1"
+            >
               <template v-slot:items="props">
                 <td class="text-xs-left">{{ props.item.id }}</td>
                 <td class="text-xs-left">{{ getName(props.item.firstname, props.item.lastname) }}</td>
@@ -39,6 +41,13 @@
                   </router-link>
                   <v-btn flat small color="error" v-on:click="deleteEmployee(props.item.id)">Delete</v-btn>
                 </td>
+              </template>
+              <template v-slot:no-results>
+                <v-alert
+                  :value="true"
+                  color="error"
+                  icon="warning"
+                >Your search for "{{ empName }}" found no results</v-alert>
               </template>
             </v-data-table>
           </v-card>
@@ -116,21 +125,21 @@ export default {
             this.snackbar = true;
           });
       }
-    },
-    searchEmployee: function() {
-      HTTP.get(URL.getEmployee, {
-        params: {
-          name: this.$data.empName
-        }
-      })
-        .then(response => {
-          this.$data.employees = response.data;
-        })
-        .catch(error => {
-          this.$data.message = "Đã có lỗi";
-          this.snackbar = true;
-        });
     }
+    // searchEmployee: function() {
+    //   HTTP.get(URL.getEmployee, {
+    //     params: {
+    //       name: this.$data.empName
+    //     }
+    //   })
+    //     .then(response => {
+    //       this.$data.employees = response.data;
+    //     })
+    //     .catch(error => {
+    //       this.$data.message = "Đã có lỗi";
+    //       this.snackbar = true;
+    //     });
+    // }
   }
 };
 </script>

@@ -6,21 +6,20 @@
     <v-container v-if="ready" grid-list-xl fluid>
       <v-layout row wrap>
         <v-card-title>
-          <h3>SALES QUOTATION</h3>
+          <h3>PAYMENT</h3>
         </v-card-title>
         <v-spacer></v-spacer>
         <v-flex md4>
           <v-text-field
-            label="Search Quotation"
+            label="Search Payment"  
             v-model="cardcode"
             append-icon="search"
             clearable
             counter="100"
           ></v-text-field>
         </v-flex>
-        <router-link v-if="!isSelect" to="/quotation/add" tag="button">
-          <v-btn round color="success" class="text-lg-right">Add new quotation</v-btn>
-          <v-btn round color="success" class="text-lg-right" @click="csvExport">Export CSV</v-btn>
+        <router-link v-if="!isSelect" to="/payment/add" tag="button">
+          <v-btn round color="success" class="text-lg-right">Add New Payment Form</v-btn>
         </router-link>
         <v-flex lg12 text-xs-right>
           <v-card class="pa-12">
@@ -141,21 +140,6 @@ export default {
     },
     selectToCopy: function(id) {
       this.$emit("selectCopy", { id: id, type: "quot" });
-    },
-    csvExport() {
-      let csvContent = "data:text/csv;charset=utf-8,";      
-      csvContent += [
-        Object.keys(quotations[0]).join(","),
-        ...this.$data.quotations.map(item => Object.values(item).join(","))
-      ]
-        .join("\n")
-        .replace(/(^\[)|(\]$)/gm, "");
-
-      const data = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", data);
-      link.setAttribute("download", "export.csv");
-      link.click();
     }
   }
 };

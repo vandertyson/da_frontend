@@ -180,6 +180,11 @@ export default {
   computed: {},
   methods: {
     save: function() {
+      if (!this.$refs.form.validate()) {
+        this.$data.message = "Một số trường chưa được nhập. Không thể lưu";
+        this.snackbar = true;
+        return;
+      }
       var post_param = {
         code: this.$data.code,
         name: this.$data.name,

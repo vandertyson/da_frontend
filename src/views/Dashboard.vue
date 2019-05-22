@@ -25,7 +25,7 @@
                 <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
-                <v-btn class="success" @click="approve(item.id)">Approve</v-btn>
+                <v-btn small class="success" @click="approveQuot(item.id)">Approve</v-btn>
               </v-list-tile-action>
             </v-list-tile>
             <v-divider v-if="index + 1 < quots.length" :key="`divider-${index}`"></v-divider>
@@ -59,7 +59,7 @@
                 <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
-                <v-btn class="success" @click="approve(item.id)">Approve</v-btn>
+                <v-btn small class="success" @click="approveOrd(item.id)">Approve</v-btn>
               </v-list-tile-action>
             </v-list-tile>
             <v-divider v-if="index + 1 < orders.length" :key="`divider-${index}`"></v-divider>
@@ -150,8 +150,8 @@ export default {
       console.log("/order/edit/" + id);
       this.$router.push("/order/edit/" + id);
     },
-    approve: function(id) {
-      HTTP.get(URL.confirm, {
+    approveQuot: function(id) {
+      HTTP.get(URL.confirmQuot, {
         params: {
           id: parseInt(id),
           confirm: "C"
@@ -190,8 +190,8 @@ export default {
           this.$data.ready = true;
         });
     },
-    approve: function(id) {
-      HTTP.get(URL.confirm, {
+    approveOrd: function(id) {
+      HTTP.get(URL.confirmOrder, {
         params: {
           id: parseInt(id),
           confirm: "C"

@@ -242,6 +242,11 @@ export default {
   computed: {},
   methods: {
     save: function() {
+      if (!this.$refs.form.validate()) {
+        this.$data.message = "Một số trường chưa được nhập. Không thể lưu";
+        this.snackbar = true;
+        return;
+      }
       var post_param = {
         id: this.$data.id,
         firstname: this.$data.firstname,

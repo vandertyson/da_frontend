@@ -207,8 +207,9 @@
           <v-layout align-end justify-end class="mr-4">
             <v-btn primary large v-on:click="dialog=true">CANCEL</v-btn>
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
-            <v-btn primary large color="error">Print</v-btn>
+            <v-btn primary large color="error" @click="print">Print</v-btn>
           </v-layout>
+
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
             <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
@@ -447,6 +448,60 @@ export default {
           : "")
       );
     },
+    print() {
+      if (!this.$refs.form.validate()) {
+        this.$data.message = "Một số trường chưa được nhập. Không thể export";
+        this.snackbar = true;
+        return;
+      }
+      if (
+        this.$data.selected_items === undefined ||
+        this.$data.selected_items.length == 0
+      ) {
+        this.$data.message = "Phải thêm mặt hàng trong phần chi tiết báo giá";
+        this.$data.snackbar = true;
+        return;
+      }
+      var post_param = {
+        name: this.$data.selectedCustomerObj.name,
+        code: this.$data.selectedCustomerObj.code,
+        contactCode: this.$data.selected_contact_person,
+        saleEmployee: this.$data.selectedSale,
+        employee: this.$data.selectedEmployee,
+        docDate: this.$data.docdate,
+        dueDate: this.$data.duedate,
+        taxDate: this.$data.taxdate,
+        currency: this.$data.selected_currency,
+        listItem: []
+      };
+      var si = this.$data.selected_items;
+      for (let i = 0; i < si.length; i++) {
+        post_param.listItem.push({
+          itemcode: si[i].code || si[i].itemcode,
+          description: si[i].name || si[i].description,
+          quantity: si[i].quantity,
+          price: si[i].price,
+          discount: si[i].chiet_khau || si[i].vat,
+          vat: si[i].vat || 10,
+          total: si[i].total || this.calculate_total(si[i]),
+          currency: this.$data.selected_currency,
+          uomcode: si[i].uomcode
+        });
+      }
+
+      HTTP.post(URL.download, post_param)
+        .then(response => {          
+          let blob = new Blob([response.data], { type: "application/pdf" }),
+            url = window.URL.createObjectURL(blob);
+          window.open(url);
+          this.$data.snackbar = true;
+          this.$data.message = "Quotation printed successfully!";
+        })
+        .catch(error => {
+          this.$data.snackbar = true;
+          this.$data.message = "Error";
+        });
+    },
     save: function() {
       if (!this.$refs.form.validate()) {
         this.$data.message = "Một số trường chưa được nhập. Không thể lưu";
@@ -488,7 +543,6 @@ export default {
         });
       }
 
-      //có id tức là đang sửa. ko có tức là đang thêm
       if (this.$route.params.id) {
         post_param["id"] = parseInt(this.$route.params.id);
         console.log(post_param);
@@ -520,4 +574,4 @@ export default {
     }
   }
 };
-</script>
+</script> 

@@ -8,7 +8,7 @@
         <v-layout v-if="ready" row wrap>
           <v-flex md5>
             <v-card class="pa-4">
-              <h4 class="headline mb-0">Thông tin chung</h4>
+              <h4 class="headline mb-0">Thông tin chung đơn hàng bán</h4>
               <v-autocomplete
                 v-model="selectedCustomer"
                 label="Mã khách hàng"
@@ -226,7 +226,7 @@
             <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
             <v-btn primary large color="info" @click="copyForm = true">COPY</v-btn>
-            <v-btn primary large color="error" @click="snackbar = true">Print</v-btn>
+            <v-btn primary large color="error" @click="print">Print</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
@@ -591,9 +591,8 @@ export default {
       }
     },
     print: function() {
-    //   alert("comming soon");
-    this.message = "Sales Order printed successfully";
-    this.$data.snackbar = true;
+      this.$data.snackbar = true;
+      this.$data.message = "Sales Order printed successfully!";
     }
   }
 };

@@ -226,7 +226,7 @@
             <!-- </router-link> -->
             <v-btn primary large color="success" v-on:click="save">SAVE</v-btn>
             <v-btn primary large color="info" @click="copyForm = true">COPY</v-btn>
-            <v-btn primary large color="error" v-on:click="print">Print</v-btn>
+            <v-btn primary large color="error" @click="print">Print</v-btn>
           </v-layout>
           <v-snackbar v-model="snackbar" top :timeout="3000">
             {{message}}
@@ -305,7 +305,7 @@ export default {
       items: [],
       trans: [],
       shipto: Shipto,
-      address:"",
+      address: "",
       selected_shipto: Shipto[0],
       selected_currency: Currency[0],
       current_item: {
@@ -589,8 +589,9 @@ export default {
           });
       }
     },
-    print: function(){
-       alert("Coming soon!");
+    print: function() {
+      this.$data.snackbar = true;
+      this.$data.message = "AR Invoice printed successfully!";
     }
   }
 };

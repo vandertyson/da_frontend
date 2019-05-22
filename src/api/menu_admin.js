@@ -57,6 +57,6 @@ export default [
         title: 'Payment Management',
         group: 'Main',
         icon: 'attach_money',
-        name: 'invoice',
+        name: 'payment',
     },
 ];
